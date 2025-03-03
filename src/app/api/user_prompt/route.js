@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
+import { openai } from "@/lib/utils";
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 // Post request
 export async function POST(req, res) {
     let user_prompt = await req.json();
-    const result = await model.generateContent(user_prompt.value);
-    return NextResponse.json({ text: result.response.text() });
+    const response = await openai.chat.completions.create({
+        model: "gemini-2.0-flash",
+        messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            {
+                role: "user",
+                content: user_prompt.prompt,
+            },
+        ],
+    });
+    return NextResponse.json({ text: response.choices[0].message});
 }
