@@ -6,8 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 // Post request
 export async function POST(req, res) {
-
-  let user_prompt= await req.json()
-  const result = await model.generateContent(user_prompt.value);
-  return NextResponse.json({ text: result.response.text() });
-}       
+    let user_prompt = await req.json();
+    const result = await model.generateContent(user_prompt.value);
+    return NextResponse.json({ text: result.response.text() });
+}
