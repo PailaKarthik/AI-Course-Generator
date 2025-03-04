@@ -4,6 +4,7 @@ import { openai } from "@/lib/utils";
 // Post request to generate the capter contents
 export async function POST(req, res) {
     let { prompt } = await req.json();
+
     
     const response = await openai.chat.completions.create({
         model: "gemini-2.0-flash",
