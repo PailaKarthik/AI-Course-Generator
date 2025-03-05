@@ -1,61 +1,62 @@
-// import MarkDown from "@/components/MarkDown";
-// const content="home Page"
+"use client";
+import MarkDown from "@/components/MarkDown";
+import RoadMap from "@/components/home/RoadMap";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+const content = "";
 
-// export default function Home() {
-//     return (
-//         <div classNameName="max-w-2xl p-4 mx-auto">
-//             <MarkDown content={content}></MarkDown>
-//         </div>
-//     );
-// }
-
-
-import { signIn,auth } from "./auth"
- 
-export default async function SignIn() {
-    let session = await auth()
-    // Data we get after signing in
-    console.log(session);
-  return (
-    <form className=" h-full"
-
-      action={async () => {
-        "use server"
-        await signIn("github")
-      }}
-    >
-      <div className="relative h-fit py-16 bg-gradient-to-br from-sky-50 to-gray-200">  
-    <div className="relative container m-auto px-6 text-gray-500 md:px-12 xl:px-40">
-        <div className="m-auto md:w-8/12 lg:w-6/12 xl:w-6/12">
-            <div className="rounded-xl bg-white shadow-xl">
-                <div className="p-6 sm:p-16">
-                    <div className="space-y-4">
-                        
-                        <h2 className="mb-8 text-2xl text-cyan-900 font-bold">Sign in to unlock the  best of Yukthi.</h2>
+export default function Home() {
+    const [roadmap, setRoadmap] = useState({});
+    const [prompt, setPrompt] = useState("");
+    const [loading, setLoading] = useState(false);
+    async function handleAsk() {
+        setLoading(true);
+        let res = await fetch("/api/user_prompt", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt }),
+        });
+        let data = await res.json();
+        console.log(data);
+        setRoadmap(data.text);
+        setLoading(false);
+    }
+    return (
+        <div className="max-w-2xl p-4 mx-auto">
+            <MarkDown content={content}></MarkDown>
+            <div
+                className={cn(
+                    "h-[calc(100vh-200px)] relative custom-scroll ",
+                    loading ? "overflow-y-hidden" : "overflow-y-scroll"
+                )}
+            >
+                {!roadmap.chapters && !loading && (
+                    <div className="flex flex-col gap-2 h-full text-xl items-center justify-center">
+                        <p>What do you want to learn</p>
                     </div>
-                    <div className="mt-16 grid space-y-4">
-                        
-                        <button type="submit" className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 
- hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
-                            <div className="relative flex items-center space-x-4 justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="absolute left-0 w-5 text-gray-700" viewBox="0 0 16 16">
-<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                                </svg>
-                                <span className="block w-max font-semibold tracking-wide text-gray-700 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">Continue with Github</span>
-                            </div>
-                        </button>
-                       
+                )}
+                {loading && (
+                    <div className="w-full h-full flex flex-col gap-2 items-center justify-center absolute z-5 opacity-95 bg-background backdrop-blur-3xl">
+                        <Loader2 className="animate-spin"></Loader2>Please wait
+                        while we generate your roadmap
                     </div>
+                )}
 
-                    <div className="mt-32 space-y-4 text-gray-600 text-center sm:-mb-8">
-                        <p className="text-xs">By proceeding, you agree to our <a href="#" className="underline">Terms of Use</a> and confirm you have read our <a href="#" className="underline">Privacy and Cookie Statement</a>.</p>
-                        <p className="text-xs">This site is protected by reCAPTCHA and the <a href="#" className="underline">Google Privacy Policy</a> and <a href="#" className="underline">Terms of Service</a> apply.</p>
-                    </div>
-                </div>
+                {roadmap.chapters && <RoadMap roadMap={roadmap}></RoadMap>}
+            </div>
+
+            <div className="p-4 rounded-lg max-w-2xl w-[95%] bottom-0 bg-background border flex my-4">
+                <input
+                    type="text"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    className="w-full outline-none"
+                    placeholder="Enter your course"
+                />
+                <Button onClick={handleAsk}>Ask</Button>
             </div>
         </div>
-    </div>
-</div>
-    </form>
-  )
-} 
+    );
+}

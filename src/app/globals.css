@@ -129,10 +129,15 @@
 }
 
 .custom-scroll::-webkit-scrollbar {
-    display: none;
+  width: 4px;
 }
 
-.custom-scroll::-webkit-scrollbar-track{
-  width: 10px;
-  background-color: red;
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #0178ff;
+  position: absolute;
 }
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #0178ff; 
+}
+
