@@ -1,6 +1,6 @@
 export const jsRoadmap = {
-    title: "JavaScript Learning Roadmap",
-    description:
+    courseTitle: "JavaScript Learning Roadmap",
+    courseDescription:
         "A comprehensive guide to learning JavaScript, from basic syntax to advanced concepts and frameworks.",
     chapters: [
         {

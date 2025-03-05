@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { jsRoadmap } from "@/lib/sampleRoadmap";
 const content = "";
 
 export default function Home() {
-    const [roadmap, setRoadmap] = useState({});
+    const [roadmap, setRoadmap] = useState(jsRoadmap);
     const [prompt, setPrompt] = useState("");
     const [loading, setLoading] = useState(false);
     async function handleAsk() {
@@ -29,7 +30,7 @@ export default function Home() {
             <div
                 className={cn(
                     "h-[calc(100vh-200px)] relative custom-scroll ",
-                    loading ? "overflow-y-hidden" : "overflow-y-scroll"
+                    loading ? "overflow-y-hidden" : " overflow-y-scroll"
                 )}
             >
                 {!roadmap.chapters && !loading && (

@@ -54,9 +54,10 @@ function Roadmap({ roadMap }) {
     }, []);
 
     return (
-        <div className="flex justify-center mt-10 max-w-3xl">
-            <div>
-                Title
+        <div className="flex flex-col justify-center max-w-3xl">
+            <div className="ml-3 mb-3">
+                <h1 className="text-2xl font-semibold">{roadMap.courseTitle}</h1>
+                <p className="text-primary">{roadMap.courseDescription}</p>
             </div>
             <div ref={roadmapRef} className="relative flex flex-col">
                 <div
