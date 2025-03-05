@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { openai } from "@/lib/utils";
+import OpenAI from "openai";
+
+export const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+});
 
 function parseJson(response) {
     const jsonMatch = response.match(/```json\n([\s\S]*?)\n```/);
@@ -23,7 +28,11 @@ export async function POST(req, res) {
     const response = await openai.chat.completions.create({
         model: "gemini-2.0-flash",
         messages: [
-            { role: "system", content: "You are a roadmap-generating assistant that creates structured, chapter-wise learning roadmaps for any concept. Ensure that each chapter is of moderate length—neither too short nor too long. Provide the response strictly in JSON format so that it can be easily parsed. The JSON should include a clear breakdown of chapters, their titles, learning objectives, content outlines, suggested activities, and assessments. The output will be used to generate detailed content for each chapter using an LLM." },
+            {
+                role: "system",
+                content:
+                    "Act as a structured roadmap generator. Create a chapter-wise learning path for [CONCEPT] with these requirements: Format: Strictly return valid JSON (no markdown) with camelCase keys. Structure: 5-8 chapters of moderate depth.  The json must contain the CourseTitle CourseDescription and Each chapter must contain: chapterNumber (integer), chapterTitle (concise), chapterDescription (1 sentence), learningObjectives (3-5 bullet points), contentOutline (4-6 key topics), suggestedActivities (2-3 practical tasks). Style: Learning objectives start with action verbs (Analyze, Implement, Compare). Activities should be classroom-ready (e.g., 'Simulate X scenario using Y tool'). Avoid vague terms - focus on measurable outcomes. Prioritize logical progression from foundational to advanced topics. Verify JSON validity before finalizing.",
+            },
             {
                 role: "user",
                 content: user_prompt.prompt,

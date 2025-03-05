@@ -127,3 +127,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.custom-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-scroll::-webkit-scrollbar-track{
+  width: 10px;
+  background-color: red;
+}

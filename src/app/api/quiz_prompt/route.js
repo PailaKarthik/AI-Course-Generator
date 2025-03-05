@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { openai } from "@/lib/utils";
+import OpenAI from "openai";
+
+export const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+});
+
 
 // Post request to generate the capter contents
 export async function POST(req, res) {
