@@ -1,0 +1,14 @@
+import { db } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { auth } from "@/app/auth";
+import { NextResponse } from "next/server";
+
+export async function POST(req) {
+    const { roadmap } = await req.json();
+    const session = await auth();
+    const docRef = await addDoc(
+        collection(db, "users", session.user.email, "roadmaps"), {...roadmap.text}
+    );
+    console.log("success", docRef.id);
+    return NextResponse.json({text : docRef.id})
+}

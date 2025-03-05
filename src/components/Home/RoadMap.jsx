@@ -57,7 +57,7 @@ function Roadmap({ roadMap }) {
         <div className="flex flex-col justify-center max-w-3xl">
             <div className="ml-3 mb-3">
                 <h1 className="text-2xl font-semibold">{roadMap.courseTitle}</h1>
-                <p className="text-primary">{roadMap.courseDescription}</p>
+                <p className="text-primary ml-2">{roadMap.courseDescription}</p>
             </div>
             <div ref={roadmapRef} className="relative flex flex-col">
                 <div
