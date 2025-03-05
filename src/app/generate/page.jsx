@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import {  useRouter } from "next/navigation";
 
+//Select Card component
 const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
     return (
         <div className="space-y-2">
@@ -60,7 +61,7 @@ const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
     );
 };
 
-export default function App() {
+export default function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data: session } = useSession();
     const router = useRouter()

@@ -3,6 +3,7 @@ import { auth, signOut } from "@/app/auth";
 import Link from "next/link";
 import { User } from "lucide-react";
 import Image from "next/image";
+
 //Temporary Navbar Component
 const Navbar = async () => {
     const session = await auth();
