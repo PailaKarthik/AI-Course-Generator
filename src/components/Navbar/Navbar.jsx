@@ -1,25 +1,42 @@
-"use client"
-import {  useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { User } from "lucide-react";
-import { CgDetailsMore } from 'react-icons/cg';
-import { authenti, signOuting } from './new';
+import { CgDetailsMore } from "react-icons/cg";
+import { authenti, signOuting } from "./new";
 
 const Navbar = () => {
   const [session, setSession] = useState(null);
   const [sidebar, setSidebar] = useState(false);
+  const [theme, setTheme] = useState("light"); // Default theme: light
 
+  // Load saved theme or use default
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.className = savedTheme; // Apply theme globally
+  }, []);
+
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.className = newTheme; // Apply theme globally
+  };
+
+  // Fetch session
   useEffect(() => {
     const fetchSession = async () => {
-      let session =  authenti();
+      let session = authenti();
       setSession(session);
     };
     fetchSession();
   }, []);
-  
 
+  // Sign out user
   const signOutUser = async () => {
     signOuting();
     setSession(null);
@@ -30,7 +47,12 @@ const Navbar = () => {
       <div className="flex w-full justify-between px-3 lg:px-10 items-center">
         {sidebar && (
           <div className="w-[360px] h-screen bg-black text-white fixed top-0 left-0 flex flex-col gap-4 p-4">
-            <button className='items-center' onClick={() => setSidebar(false)}><IoClose /></button>
+            <button
+              className="items-center"
+              onClick={() => setSidebar(false)}
+            >
+              <IoClose />
+            </button>
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/contact">Contact</Link>
@@ -38,15 +60,26 @@ const Navbar = () => {
             <button onClick={signOutUser}>Logout</button>
           </div>
         )}
-        <button onClick={() => setSidebar(true)}><CgDetailsMore /></button>
+        <button onClick={() => setSidebar(true)}>
+          <CgDetailsMore />
+        </button>
         <div className="flex items-center gap-1">
-          <img src="/YUKTHI_LOGO-removebg-preview.png" alt="png" width={"48px"} />
+          <img
+            src="/YUKTHI_LOGO-removebg-preview.png"
+            alt="png"
+            width={"48px"}
+          />
           <Link href="/">
             <h2 className="text-xl font-semibold">YUKTHI</h2>
           </Link>
-
         </div>
-        <div>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={toggleTheme}
+            className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+          >
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+          </button>
           {session ? (
             <User className="w-5" />
           ) : (
