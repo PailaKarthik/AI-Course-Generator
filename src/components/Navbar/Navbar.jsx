@@ -44,6 +44,7 @@ const Navbar = () => {
           <Link href="/">
             <h2 className="text-md font-semibold">Yukthi</h2>
           </Link>
+
         </div>
         <div>
           {session ? (
