@@ -1,15 +1,24 @@
+import { redirect } from "next/navigation";
 import { signIn, auth } from "../auth";
 
 export default async function SignIn() {
-    let session = await auth();
-    // Data we get after signing in
-    console.log(session);
+    const session = await auth();
+    let logedin=()=>{
+        if (session) {
+            redirect("/");
+        }
+        
+    }
+    logedin();
+   
     return (
         <form
             className=" h-full"
             action={async () => {
                 "use server";
                 await signIn("github");
+                
+                
             }}
         >
             <div className="relative h-fit py-16 bg-gradient-to-br from-sky-50 to-gray-200">
