@@ -11,23 +11,23 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-
 //function to fetch roadmap
 async function getRoadmap(id) {
     const session = await auth();
-    const docRef = doc(db, "users", session.user.email, "roadmaps", id);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists) {
-        return false;
+    if (session) {
+        const docRef = doc(db, "users", session.user.email, "roadmaps", id);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists) {
+            return false;
+        }
+        return docSnap.data();
     }
-    return docSnap.data();
 }
 
 //roadmap component
 const page = async ({ params }) => {
     const { id } = params;
     const roadmap = await getRoadmap(id);
-    console.log(roadmap);
 
     if (!roadmap) {
         return (
@@ -54,7 +54,9 @@ const page = async ({ params }) => {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>{roadmap.courseTitle}</BreadcrumbPage>
+                            <BreadcrumbPage>
+                                {roadmap.courseTitle}
+                            </BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
