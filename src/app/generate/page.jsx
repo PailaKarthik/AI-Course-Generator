@@ -199,7 +199,8 @@ export default function Page() {
                 </div>
             )}
             <div className="mx-auto max-w-3xl">
-                <div className="mb-8 text-center">
+                <div className="mb-8 text-center flex flex-col items-center justify-center">
+                    <div className="absolute w-44 h-44 bg-blue-300 rounded-full blur-[100px]"></div>
                     <h1 className="text-4xl font-bold tracking-tight">
                         Course Generator
                     </h1>

@@ -1,5 +1,5 @@
 "use client"
-import { use, useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { IoClose } from "react-icons/io5";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -27,9 +27,9 @@ const Navbar = () => {
 
   return (
     <div className="p-2 w-full border-b fixed top-0 left-0 bg-background z-50">
-      <div className="flex w-full justify-between items-center">
+      <div className="flex w-full justify-between px-3 lg:px-10 items-center">
         {sidebar && (
-          <div className="w-64 h-screen bg-black text-white fixed top-0 left-0 flex flex-col gap-4 p-4">
+          <div className="w-[360px] h-screen bg-black text-white fixed top-0 left-0 flex flex-col gap-4 p-4">
             <button className='items-center' onClick={() => setSidebar(false)}><IoClose /></button>
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
@@ -40,9 +40,9 @@ const Navbar = () => {
         )}
         <button onClick={() => setSidebar(true)}><CgDetailsMore /></button>
         <div className="flex items-center gap-1">
-          <img src="/YUKTHI_LOGO-removebg-preview.png" alt="png" width={"35px"} />
+          <img src="/YUKTHI_LOGO-removebg-preview.png" alt="png" width={"48px"} />
           <Link href="/">
-            <h2 className="text-md font-semibold">Yukthi</h2>
+            <h2 className="text-xl font-semibold">YUKTHI</h2>
           </Link>
 
         </div>
