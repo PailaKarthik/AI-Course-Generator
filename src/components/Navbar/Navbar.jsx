@@ -6,6 +6,7 @@ import Link from "next/link";
 import { User } from "lucide-react";
 import { CgDetailsMore } from "react-icons/cg";
 import { authenti, signOuting } from "./new";
+import { Sun, Moon } from "lucide-react";
 
 const Navbar = () => {
   const [session, setSession] = useState(null);
@@ -67,6 +68,7 @@ const Navbar = () => {
           <img
             src="/YUKTHI_LOGO-removebg-preview.png"
             alt="png"
+            className="dark:invert-100"
             width={"48px"}
           />
           <Link href="/">
@@ -74,12 +76,13 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <button
+          <Button
             onClick={toggleTheme}
-            className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+            variant={"outline"}
+            className={"border-0"}
           >
-            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
-          </button>
+            {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
+          </Button>
           {session ? (
             <User className="w-5" />
           ) : (

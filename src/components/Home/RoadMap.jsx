@@ -11,7 +11,7 @@ function Roadmap({ roadMap }) {
             </div>
             <div className="relative flex flex-col">
                 <div
-                    className="absolute w-1 top-1 left-2.5 bg-gray-200"
+                    className="absolute w-1 top-1 left-2.5 bg-zinc-200 dark:bg-zinc-900"
                     style={{
                         height: `${(roadMap.chapters.length - 1) * 34 * 4}px`,
                     }}
@@ -22,16 +22,16 @@ function Roadmap({ roadMap }) {
                         key={index}
                         className="relative flex gap-4 h-32 last:mb-0 mb-2"
                     >
-                        <div className="w-6 h-6 shrink-0 rounded-full border bg-gray-200 border-gray-300 flex justify-center items-center"></div>
+                        <div className="w-6 h-6 shrink-0 rounded-full border bg-zinc-200 dark:bg-zinc-900 border-gray-300 dark:border-zinc-800 flex justify-center items-center"></div>
 
                         <Link
                             href={""}
                             className="flex flex-col border sm:h-max max-w-xl w-[95%] rounded-md p-2"
                         >
-                            <span className="text-gray-700 font-semibold">
+                            <span className="text-secondary-foreground font-semibold">
                                 {chapter.chapterNumber} . {chapter.chapterTitle}
                             </span>
-                            <span className="text-gray-700">
+                            <span className="text-secondary-foreground">
                                 {chapter.chapterDescription}
                             </span>
                         </Link>
