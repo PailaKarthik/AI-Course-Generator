@@ -26,7 +26,7 @@ async function getRoadmap(id) {
 
 //roadmap component
 const page = async ({ params }) => {
-    const { id } = params;
+    const { id } = await params;
     const roadmap = await getRoadmap(id);
 
     if (!roadmap) {
@@ -60,7 +60,7 @@ const page = async ({ params }) => {
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
-                <Roadmap roadMap={roadmap}></Roadmap>
+                <Roadmap roadMap={roadmap} id={id}></Roadmap>
             </div>
         </div>
     );

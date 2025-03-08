@@ -7,6 +7,7 @@ import { User } from "lucide-react";
 import { CgDetailsMore } from "react-icons/cg";
 import { authenti, signOuting } from "./new";
 import { Sun, Moon } from "lucide-react";
+import Image from "next/image";
 
 const Navbar = () => {
   const [session, setSession] = useState(null);
@@ -65,21 +66,23 @@ const Navbar = () => {
           <CgDetailsMore />
         </button>
         <div className="flex items-center gap-1">
-          <img
+          <Link href="/" className="flex gap-1 items-center">
+          <Image
             src="/YUKTHI_LOGO-removebg-preview.png"
-            alt="png"
+            alt="logo"
             className="dark:invert-100"
-            width={"48px"}
+            width={48}
+            height={48}
           />
-          <Link href="/">
+          
             <h2 className="text-xl font-semibold">YUKTHI</h2>
           </Link>
         </div>
         <div className="flex items-center gap-4">
           <Button
             onClick={toggleTheme}
-            variant={"outline"}
-            className={"border-0"}
+            variant={"ghost"}
+            className={"border-0 "}
           >
             {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
           </Button>
