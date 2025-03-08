@@ -41,6 +41,7 @@ const topics = [
 const Page = ({ chapter, roadmapId }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [chapterData, setChapterData] = useState({});
+    const [notFound, setNotFound] = useState(false);
     const id = roadmapId;
 
     async function getRoadmap() {
@@ -57,24 +58,27 @@ const Page = ({ chapter, roadmapId }) => {
 
             if (response.status === 404) {
                 const roadmap = await getRoadmap();
-                
+                const chapterDetails = roadmap.chapters.find(
+                    (ch) => ch.chapterNumber === Number(chapter)
+                );
+                if (!chapterDetails) {
+                    setNotFound(true);
+                    return;
+                }
                 const chapterResponse = await fetch(`/api/chapter-prompt`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        prompt: roadmap.chapters.find(
-                            (ch) =>
-                                ch.chapterNumber === Number(chapter)
-                        ),
+                        prompt: chapterDetails,
                     }),
                 });
 
                 const chapterData = await chapterResponse.json();
                 setChapterData(chapterData.text);
                 console.log(chapterData.text);
-                
+
                 addChapter(chapterData.text);
             } else {
                 const data = await response.json();
