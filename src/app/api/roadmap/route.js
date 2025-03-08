@@ -13,3 +13,4 @@ export async function POST(req) {
     console.log("success", docRef.id);
     return NextResponse.json({text : docRef.id})
 }
+

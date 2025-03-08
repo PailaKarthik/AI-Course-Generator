@@ -25,6 +25,7 @@ function parseJson(response) {
 // Post request to generate the capter contents
 export async function POST(req, res) {
     let { prompt } = await req.json();
+    console.log(prompt);
 
     const response = await openai.chat.completions.create({
         model: "gemini-2.0-flash",
