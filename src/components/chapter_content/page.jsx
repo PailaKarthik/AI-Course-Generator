@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { use, useState} from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Sidebar from "../sidebar/page";
 
 // Sample topic data
 const topics = [
@@ -37,21 +38,22 @@ const topics = [
   },
 ];
 
-const Page = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [overviewBar, setOverviewBar] = useState(true);
-  const overviewRef = useRef(null);
-  const overview = useRef(null);
-
-  useEffect(() => {
-    if (overviewRef.current) {
-      overview.current.style.display = overviewBar ? "flex" : "none";
-    }
-  }, [overviewBar]);
-
-  const handleSelectTopic = (index) => {
-    setSelectedIndex(index);
-  };
+const Page = (chapterTitle,subtopic) => {
+  const [selectedIndex, setSelectedIndex] = useState(chapterTitle.subtopic);
+  console.log(chapterTitle.chapterTitle);
+  // useEffect(async() => {
+  //   data=fetch("/api/chapter-promt"
+  //   ,{
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({chapterTitle.chapterTitle}),
+  //   })
+  //   .then((response) => response.json())
+  // }, [])
+  
+   
 
   const handleNext = () => {
     if (selectedIndex < topics.length - 1) {
@@ -68,33 +70,7 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar Navigation */}
-        <div
-          ref={overviewRef}
-          style={{ overflow: "hidden", transition: "height 0.9s ease-in-out" ,
-          }}
-          className="w-full h-fit transition ease-out duration-1000 md:w-96 rounded-3xl border border-[#e5e5e5] shadow-sm p-6 flex flex-col gap-4"
-        >
-          <button
-            onClick={() => setOverviewBar(!overviewBar)}
-            className="w-full  bg-black text-white dark:text-black dark:bg-white rounded-full py-4 font-medium"
-          >
-            {overviewBar ? "Hide Overview" : "Show Overview"}
-          </button>
-          <div ref={overview} className="flex flex-col">
-            {topics.map((topic, index) => (
-              <button
-                key={index}
-                onClick={() => handleSelectTopic(index)}
-                className={`w-full border rounded-full py-4 my-2 font-medium ${
-                  selectedIndex === index ? "bg-gray-200 dark:bg-[#373636]" : "bg-background"
-                }`}
-              >
-                {topic.title}
-              </button>
-            ))}
-          </div>
-        </div>
+        <Sidebar/>
 
         {/* Content Area */}
         <div className="flex-1 bg-background border rounded-3xl p-8">
