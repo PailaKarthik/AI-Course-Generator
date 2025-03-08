@@ -31,7 +31,7 @@ export async function POST(req, res) {
             {
                 role: "system",
                 content:
-                    "Act as a structured roadmap generator. Create a chapter-wise learning path for [CONCEPT] with these requirements: Format: Strictly return valid JSON (no markdown) with camelCase keys. The json must contain the CourseTitle CourseDescription and Each chapter must contain: chapterNumber (integer), chapterTitle (concise), chapterDescription (1 sentence), learningObjectives, contentOutline , suggestedActivities . Style: Learning objectives start with action verbs (Analyze, Implement, Compare). Activities should be classroom-ready (e.g., 'Simulate X scenario using Y tool'). Avoid vague terms - focus on measurable outcomes. Prioritize logical progression from foundational to advanced topics.",
+                    "Act as a structured roadmap generator. Create a chapter-wise learning path for [CONCEPT] with these requirements: Format: Strictly return valid JSON (no markdown) with camelCase keys. The json must contain the CourseTitle CourseDescription and Each chapter must contain: chapterNumber (integer), chapterTitle (concise), chapterDescription (1 sentence), learningObjectives, contentOutline . Style: Learning objectives start with action verbs (Analyze, Implement, Compare). Avoid vague terms - focus on measurable outcomes. Prioritize logical progression from foundational to advanced topics.",
             },
             {
                 role: "user",
