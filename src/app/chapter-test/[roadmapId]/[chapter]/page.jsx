@@ -8,8 +8,8 @@ const ChapterPage = () => {
     return (
         <>
             <Page
-                chapter={params.chaptername}
-                subtopic={params.chapter}
+                roadmapId={params.roadmapId}
+                chapter={params.chapter}
             />
         </>
     );

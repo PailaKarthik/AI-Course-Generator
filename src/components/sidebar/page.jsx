@@ -67,13 +67,13 @@ export default function Sidebar({ roadmap, id, loading }) {
             <aside
                 className={`
         fixed top-16 left-0 z-40 h-screen border-r border-border
-        transition-all duration-300 pb-24 ease-in-out shrink-0 custom-scroll
+        transition-all duration-200 pb-24 ease-in-out shrink-0 custom-scroll
         ${
             isMobileSidebarOpen
                 ? "translate-x-0"
                 : "-translate-x-full lg:translate-x-0"
         }
-        w-80 lg:w-96 p-6 bg-card overflow-y-scroll
+        w-[95vw] max-w-lg lg:w-96 p-6 bg-card overflow-y-scroll
       `}
             >
                 {isMobileSidebarOpen && (
@@ -122,7 +122,7 @@ export default function Sidebar({ roadmap, id, loading }) {
                                             expandedChapters[chapterIndex] &&
                                                 "rounded-b-none",
                                             activeChapter === chapterIndex &&
-                                                "bg-white"
+                                                "bg-blue-50 hover:bg-blue-100 dark:hover:bg-blue-900/50 dark:bg-blue-950/60"
                                         )}
                                         aria-expanded={
                                             expandedChapters[chapterIndex]

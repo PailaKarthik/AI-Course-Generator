@@ -24,6 +24,7 @@ const Page = ({ chapter, roadmapId }) => {
 
     async function getRoadmap() {
         try {
+            
             const response = await fetch(`/api/roadmap/${roadmapId}`);
             if (response.ok) {
                 const data = await response.json();
