@@ -140,3 +140,19 @@
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: #0178ff; 
 }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent; /* Background color of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-transparent rounded-full; /* Scrollbar color and shape */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white; /* Darker color on hover */
+}

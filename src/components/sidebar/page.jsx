@@ -298,7 +298,7 @@ const chapters= [
     
         const routetopage = (title, idx) => {
             const formattedTitle = title.toLowerCase().replace(/\s+/g, "-"); // Format title as a URL slug
-            router.push(`/chapter-test/${formattedTitle}?subtopic=${idx + 1}`);
+            router.push(`/chapter-test/${formattedTitle}/${idx }`);
         };
     
         return (
