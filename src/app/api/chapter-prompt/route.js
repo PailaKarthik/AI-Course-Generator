@@ -16,6 +16,7 @@ function parseJson(response) {
             return jsonData;
         } catch (error) {
             console.error("Error parsing JSON:", error);
+            return NextResponse.json({ error }, { status: 500 });
         }
     } else {
         console.error("No JSON found in the response");
@@ -25,24 +26,27 @@ function parseJson(response) {
 // Post request to generate the capter contents
 export async function POST(req, res) {
     let { prompt } = await req.json();
-    console.log(prompt);
+    try {
+        const response = await openai.chat.completions.create({
+            model: "gemini-2.0-flash",
+            messages: [
+                {
+                    role: "system",
+                    content:
+                        "You are a chapter content generator that creates structured, engaging, and detailed educational content across various subjects based on provided chapter details in JSON format, including title, learningObjectives, and contentOutline, returning a JSON response with title, chapterNumber, learningObjectives, chapterDescription, subtopics (each with a header, title, content as an array of {type: (header1, header2, header3, para, points, code), content: (text)}, where points are in markdown, let the content be array of points for points type and code is in markdown format, otherResources which properly align with the topic(upto 5 resources), and optional examples), along with the well-balanced tasks (upto 3 tasks) in JSON format (multiple-choice|coding(only when a programming laguage is involved in the chapter)|fill-in-the-blank), ensuring task type aligns with key concepts, coding questions require concise answers with provided input values, fill-in-the-blanks strictly use '________' for blanks and include an array of acceptableAnswers with synonyms or variations of the correct answer, multiple-choice tasks have four options, and answers are formatted properly while maintaining a structured and explanation is provided for all the tasks, let everything be simple string don't give latex responses comprehensive, yet concise approach to learning.",
+                },
+                {
+                    role: "user",
+                    content: JSON.stringify(prompt),
+                },
+            ],
+        });
 
-    const response = await openai.chat.completions.create({
-        model: "gemini-2.0-flash",
-        messages: [
-            {
-                role: "system",
-                content:
-                    "You are a chapter content generator that creates structured, engaging, and well-detailed and all types of educational content not only coding based on provided chapter details in JSON format, including title, learningObjectives, contentOutline and returns a JSON response containing title, chapterNumber, learningObjectives, chapterDescription,  subtopics (each with title, content as an array of {type: (header1, header2, header3, para, points(for bullet points), code(for any code) ), content: (text)} where content is an array of strings(points) if the type is set to points let the points be in markdown format and it is a markdown of only the code if the type is set to code, videoSuggestions for each sub topics, each subtopic must have an header, and optional example ), along with one task in JSON format based on the provided chapter content, ensuring the task type (multiple-choice|coding|fill-in-the-blank) is appropriate, aligns with key concepts and do not give the coding question for the chapters that doesn't need coding. Keep coding questions on point to obatin not more than 2 words solution with providing input value, address with 'write a code ' for coding tasks ,uses lowercase answers for fill-in-the-blank, options are only for the multiple-choice type questions, and follows this structure: { 'type': 'multiple-choice|coding|fill-in-the-blank', 'question': 'Clear question text', 'options': ['Option A', 'Option B', 'Option C', 'Option D'], 'answer': 'Correct answer'(let the correct answer for the coding questions be expected output in the lowercase), 'explanation': 'Brief explanation' }, ensuring the content is comprehensive yet concise, logically structured, aligned with learning objectives, and includes examples and external resources where relevant for better understanding.",
-            },
-            {
-                role: "user",
-                content: JSON.stringify(prompt),
-            },
-        ],
-    });
+        const data = parseJson(response.choices[0].message.content);
 
-    const data = parseJson(response.choices[0].message.content);
-
-    return NextResponse.json({ text: data });
+        return NextResponse.json({ text: data });
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error }, { status: 500 });
+    }
 }
