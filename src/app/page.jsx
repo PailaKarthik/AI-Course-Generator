@@ -48,8 +48,8 @@ export default async function page() {
                     }
                 >
                     <div className="flex flex-col items-center">
-                        <Plus strokeWidth={1} className="w-36 h-36"></Plus>
-                        <p className="text-2xl text-center">
+                        <Plus strokeWidth={1} className="w-32 h-32"></Plus>
+                        <p className="text-lg text-center">
                             Create your course
                         </p>
                     </div>

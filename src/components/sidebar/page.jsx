@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import { ChevronDown, ChevronUp, ChevronRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function Sidebar({ roadmap, id, loading }) {
+export default function Sidebar({ roadmap, id }) {
     const [isOverviewVisible, setIsOverviewVisible] = useState(true);
     const [expandedChapters, setExpandedChapters] = useState({});
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);

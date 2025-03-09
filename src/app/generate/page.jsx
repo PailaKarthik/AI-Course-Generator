@@ -115,12 +115,7 @@ export default function Page() {
         }
 
         const prompt = `
-            Generate a detailed, structured learning roadmap for a ${data.knowledgeLevel} 
-            to master the concept of ${data.concept}. 
-            If this concept is unsuitable for forming a course (analyze it for all age groups), 
-            return a JSON response: { "error": 404 }.
-            The user can dedicate ${data.timeCommitment} and wants an ${data.difficultyLevel} 
-            learning experience, aiming to complete the roadmap in ${data.completionTime}.
+            Generate a structured learning roadmap for ${data.concept} at ${data.knowledgeLevel}, tailored for a ${data.difficultyLevel} learning experience, considering a ${data.timeCommitment} and aiming for completion in ${data.completionTime}, generate as many chapters as possible if the completion time is greater than or equals to 3-months. scaling chapters accordingly with key topics, objectives, resources, and exercises; if unsuitable for a structured course across all age groups, return { "error": 404 }.
         `;
         console.log(prompt);
         
