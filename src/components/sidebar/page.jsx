@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { ChevronDown, ChevronUp, ChevronRight, Menu, X } from "lucide-react";
@@ -13,6 +13,7 @@ export default function Sidebar({ roadmap, id }) {
     const [chapters, setChapters] = useState([]);
     const [activeSubtopic, setActiveSubtopic] = useState(null);
     const [activeChapter, setActiveChapter] = useState(null);
+    const query = useSearchParams()
     const router = useRouter();
 
     const toggleChapter = (index) => {
@@ -51,6 +52,11 @@ export default function Sidebar({ roadmap, id }) {
 
         setExpandedChapters({ [parseInt(chapterNumber) - 1]: true });
     }, [roadmap]);
+
+    useEffect(() => {
+      setActiveSubtopic(Number(query.get("subtopic")))
+    }, [query.get("subtopic")])
+    
 
     return (
         <>
@@ -151,6 +157,10 @@ export default function Sidebar({ roadmap, id }) {
                                         <div className="pl-4 py-2 bg-zinc-50 dark:bg-zinc-900/80 rounded-b-lg">
                                             {chapter.contentOutline.map(
                                                 (content, subtopicIndex) => {
+                                                    console.log(
+                                                        activeSubtopic ===
+                                                            subtopicIndex );
+                                                    
                                                     const isActive =
                                                         activeChapter ===
                                                             chapterIndex &&
