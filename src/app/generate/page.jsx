@@ -122,6 +122,8 @@ export default function Page() {
             The user can dedicate ${data.timeCommitment} and wants an ${data.difficultyLevel} 
             learning experience, aiming to complete the roadmap in ${data.completionTime}.
         `;
+        console.log(prompt);
+        
 
         let res = await fetch("/api/user_prompt", {
             method: "POST",

@@ -46,8 +46,13 @@ const Page = ({ chapter, roadmapId }) => {
 
     async function getRoadmap() {
         const response = await fetch(`/api/roadmap/${id}`);
-        const data = await response.json();
-        return data;
+        if (response.status == 200) {
+            const data = await response.json();
+            return data;
+        }
+        console.log("not- found road");
+        
+        return false;
     }
 
     async function fetchChapter() {
@@ -58,6 +63,10 @@ const Page = ({ chapter, roadmapId }) => {
 
             if (response.status === 404) {
                 const roadmap = await getRoadmap();
+                if (!roadmap) {
+                    setNotFound(true);
+                    return;
+                }
                 const chapterDetails = roadmap.chapters.find(
                     (ch) => ch.chapterNumber === Number(chapter)
                 );
