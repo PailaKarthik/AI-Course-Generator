@@ -140,3 +140,7 @@
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: #0178ff; 
 }
+
+body {
+  overflow-x: hidden;
+}

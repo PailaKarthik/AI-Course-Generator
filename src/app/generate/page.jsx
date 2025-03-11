@@ -42,7 +42,7 @@ const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
               ${
                   selectedValue === option.value
                       ? "border-blue-400 bg-blue-500/10 ring-1 ring-blue-400"
-                      : "border-gray-200 hover:bg-gray-100"
+                      : "border-border hover:bg-accent/60"
               }
             `}
                     >

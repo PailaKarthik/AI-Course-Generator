@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { auth } from "@/app/auth";
 import { NextResponse } from "next/server";
 
@@ -27,5 +27,25 @@ export async function GET(req, { params }) {
         return NextResponse.json(docSnap.data());
     } catch (error) {
         return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(req, { params }) {
+    try {
+        const session = await auth();
+        if (!session) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const { id } = await params;
+        const docRef = doc(db, "users", session.user.email, "roadmaps", id);
+        await deleteDoc(docRef);
+
+        return NextResponse.json({ message: "Roadmap deleted successfully" });
+    } catch (error) {
+        return NextResponse.json({ message: error }, { status: 500 });
     }
 }
