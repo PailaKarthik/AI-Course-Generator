@@ -12,17 +12,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { loader } from "../ui/Custom/ToastLoader";
 
 const DeleteRoadmap = ({ id, onDelete }) => {
+    const { showLoader } = loader();
     async function deleteRoadmap(id) {
+        showLoader()
         const response = await fetch(`/api/roadmap/${id}`, {
             method: "DELETE",
         });
         const data = await response.json();
-
         if (response.status === 200) {
             toast.success(data.message);
-            onDelete()
+            onDelete();
         } else {
             toast.error(data.message);
         }

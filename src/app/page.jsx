@@ -5,13 +5,19 @@ import DeleteRoadmap from "@/components/Home/DeleteRoadmap";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { loader } from "@/components/ui/Custom/ToastLoader";
 
 export default function page() {
     const [roadmaps, setRoadmaps] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { hideLoader } = loader();
+
     async function fetchRoadmaps() {
+        setLoading(true);
         const response = await fetch("/api/roadmap/all");
         const data = await response.json();
         setRoadmaps(data.docs);
+        setLoading(false);
     }
     useEffect(() => {
         fetchRoadmaps();
@@ -21,22 +27,30 @@ export default function page() {
         <div className="max-w-6xl flex flex-col mb-96 gap-4 items-center p-4 mx-auto">
             <h1 className="text-2xl font-semibold self-start">YOUR COURSES </h1>
             <div className="flex gap-6 justify-center flex-wrap">
-                {roadmaps.length === 0 &&
+                {loading &&
                     Array(3)
                         .fill(0)
                         .map((_, i) => {
-                            return <Skeleton key={i} className={"w-72 h-64"}></Skeleton>
+                            return (
+                                <Skeleton
+                                    key={i}
+                                    className={"w-[320px] h-64"}
+                                ></Skeleton>
+                            );
                         })}
                 {roadmaps.map((roadmap) => (
                     <Card key={roadmap.id} className={"w-[320px] relative"}>
                         <CardHeader>
                             <CardTitle>
-                                {roadmap.courseTitle.split(":")[0]}
+                                {roadmap?.courseTitle?.split(":")[0]}
                             </CardTitle>
                             <div className="absolute z-10 top-0 right-0">
                                 <DeleteRoadmap
                                     id={roadmap.id}
-                                    onDelete={fetchRoadmaps}
+                                    onDelete={() => {
+                                        fetchRoadmaps();
+                                        hideLoader();
+                                    }}
                                 ></DeleteRoadmap>
                             </div>
                         </CardHeader>

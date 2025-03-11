@@ -7,7 +7,6 @@ function Roadmap({ roadMap, id }) {
     const [height, setHeight] = useState(
         (roadMap.chapters.length - 1) * 34 * 4
     );
-    const pathName = usePathname()
 
     useEffect(() => {
         function updateHeight() {
