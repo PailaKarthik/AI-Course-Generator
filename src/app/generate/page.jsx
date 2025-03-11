@@ -194,11 +194,15 @@ export default function Page() {
 
     useEffect(() => {
         if(isSubmitting){
-            document.scrol
+            window.scrollTo({ top: 0, behavior: "smooth" });
             document.documentElement.style.overflow = "hidden"
         } else {
             document.documentElement.style.overflow = "auto"
         }
+
+        return () => {
+            document.documentElement.style.overflow = "auto";
+        };
     }, [isSubmitting])
     
 
