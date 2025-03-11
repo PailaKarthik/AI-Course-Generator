@@ -1,40 +1,32 @@
-import { Button } from "@/components/ui/button";
-import { db } from "@/lib/firebase";
-import { getDocs, query, collection } from "firebase/firestore";
-import { auth } from "./auth";
+"use client";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import DeleteRoadmap from "@/components/Home/DeleteRoadmap";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-async function getRoadmaps() {
-    const session = await auth();
-    if (!session?.user?.email) return [];
-
-    const q = query(collection(db, "users", session.user.email, "roadmaps"));
-
-    const querySnapshot = await getDocs(q);
-
-    const docs = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        courseTitle: doc.data().courseTitle,
-        courseDescription: doc.data().courseDescription,
-    }));
-
-    return docs;
-}
-
-async function deleteRoadmap() {
-    const session = await auth();
-}
-
-export default async function page() {
-    const roadmaps = await getRoadmaps();
+export default function page() {
+    const [roadmaps, setRoadmaps] = useState([]);
+    async function fetchRoadmaps() {
+        const response = await fetch("/api/roadmap/all");
+        const data = await response.json();
+        setRoadmaps(data.docs);
+    }
+    useEffect(() => {
+        fetchRoadmaps();
+    }, []);
 
     return (
         <div className="max-w-6xl flex flex-col mb-96 gap-4 items-center p-4 mx-auto">
             <h1 className="text-2xl font-semibold self-start">YOUR COURSES </h1>
             <div className="flex gap-6 justify-center flex-wrap">
+                {roadmaps.length === 0 &&
+                    Array(3)
+                        .fill(0)
+                        .map((_, i) => {
+                            return <Skeleton key={i} className={"w-72 h-64"}></Skeleton>
+                        })}
                 {roadmaps.map((roadmap) => (
                     <Card key={roadmap.id} className={"w-[320px] relative"}>
                         <CardHeader>
@@ -42,7 +34,10 @@ export default async function page() {
                                 {roadmap.courseTitle.split(":")[0]}
                             </CardTitle>
                             <div className="absolute z-10 top-0 right-0">
-                                <DeleteRoadmap id={roadmap.id}></DeleteRoadmap>
+                                <DeleteRoadmap
+                                    id={roadmap.id}
+                                    onDelete={fetchRoadmaps}
+                                ></DeleteRoadmap>
                             </div>
                         </CardHeader>
                         <CardContent>{roadmap.courseDescription}</CardContent>
@@ -58,7 +53,7 @@ export default async function page() {
                     }
                 >
                     <div className="flex flex-col items-center text-accent-foreground/70">
-                        <Plus strokeWidth={1} className="w-32 h-32"></Plus>
+                        <Plus strokeWidth={1} className="w-30 h-30"></Plus>
                         <p className="text-lg text-center">
                             Create your course
                         </p>

@@ -13,19 +13,23 @@ import {
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const DeleteRoadmap = ({ id }) => {
+const DeleteRoadmap = ({ id, onDelete }) => {
     async function deleteRoadmap(id) {
         const response = await fetch(`/api/roadmap/${id}`, {
             method: "DELETE",
         });
         const data = await response.json();
-        response.status === 200
-            ? toast.success(data.message)
-            : toast.error(data.message);
+
+        if (response.status === 200) {
+            toast.success(data.message);
+            onDelete()
+        } else {
+            toast.error(data.message);
+        }
     }
     return (
         <AlertDialog>
-            <AlertDialogTrigger className="p-2 cursor-pointer hover:text-red-500 transition-colors duration-200">
+            <AlertDialogTrigger className="py-2 px-3 cursor-pointer hover:text-red-500 transition-colors duration-200">
                 <Trash2 className="w-4" />
             </AlertDialogTrigger>
             <AlertDialogContent>
