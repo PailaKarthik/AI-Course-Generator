@@ -42,7 +42,7 @@ export default function page() {
                     <Card key={roadmap.id} className={"w-[320px] relative"}>
                         <CardHeader>
                             <CardTitle>
-                                {roadmap?.courseTitle?.split(":")[0]}
+                                {roadmap?.courseTitle?.split(":")[0] || ""}
                             </CardTitle>
                             <div className="absolute z-10 top-0 right-0">
                                 <DeleteRoadmap

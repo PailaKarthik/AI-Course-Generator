@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar, Clock, Flag, GraduationCap, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -25,7 +25,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 //Select Card component
 const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
@@ -64,7 +64,7 @@ const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
 export default function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data: session } = useSession();
-    const router = useRouter()
+    const router = useRouter();
 
     const formSchema = z.object({
         concept: z
@@ -85,7 +85,14 @@ export default function Page() {
             errorMap: () => ({ message: "Please select a difficulty level" }),
         }),
         completionTime: z.enum(
-            ["1-week", "2-weeks", "1-month", "2-months", "3-months", "6-months"],
+            [
+                "1-week",
+                "2-weeks",
+                "1-month",
+                "2-months",
+                "3-months",
+                "6-months",
+            ],
             {
                 errorMap: () => ({
                     message: "Please select a completion time",
@@ -117,8 +124,6 @@ export default function Page() {
         const prompt = `
             Generate a structured learning roadmap for ${data.concept} at ${data.knowledgeLevel}, tailored for a ${data.difficultyLevel} learning experience, considering a ${data.timeCommitment} and aiming for completion in ${data.completionTime}, generate as many chapters as possible if the completion time is greater than or equals to 3-months. scaling chapters accordingly with key topics, objectives, resources, and exercises; if unsuitable for a structured course across all age groups, return { "error": 404 }.
         `;
-        console.log(prompt);
-        
 
         let res = await fetch("/api/user_prompt", {
             method: "POST",
@@ -143,9 +148,9 @@ export default function Page() {
         });
 
         if (roadmapResponse.ok) {
-            const id = await roadmapResponse.json()
+            const id = await roadmapResponse.json();
             toast.success("Roadmap generated successfully");
-            router.push(`/roadmap/${id.text}`)
+            router.push(`/roadmap/${id.text}`);
         } else {
             toast.error("Failed to generate roadmap");
         }
@@ -187,15 +192,25 @@ export default function Page() {
         },
     ];
 
+    useEffect(() => {
+        if(isSubmitting){
+            document.scrol
+            document.documentElement.style.overflow = "hidden"
+        } else {
+            document.documentElement.style.overflow = "auto"
+        }
+    }, [isSubmitting])
+    
+
     return (
-        <div className="min-h-screen bg-background pt-4">
+        <div className="min-h-screen bg-background">
             {isSubmitting && (
-                <div className="w-full h-full flex flex-col gap-2 items-center justify-center absolute z-5 opacity-95 bg-background backdrop-blur-3xl">
-                    <Loader2 className="animate-spin"></Loader2>Please wait
-                    while we generate your roadmap
+                <div className="w-full h-screen flex flex-col gap-2 items-center justify-center absolute z-5 opacity-95 bg-background backdrop-blur-3xl">
+                    <Loader2 className="animate-spin -translate-y-16"></Loader2>
+                    <p className="-translate-y-16"> Please wait while we generate your roadmap</p>
                 </div>
             )}
-            <div className="mx-auto max-w-3xl">
+            <div className="mx-auto max-w-3xl pt-4">
                 <div className="mb-8 text-center flex flex-col items-center justify-center">
                     <div className="absolute w-44 h-44 bg-blue-300 rounded-full blur-[100px]"></div>
                     <h1 className="text-4xl font-bold tracking-tight">
