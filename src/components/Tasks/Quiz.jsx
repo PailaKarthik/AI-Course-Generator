@@ -41,8 +41,8 @@ export default function Quiz({task}) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4 w-[98vw]">
-            <Card className="shadow-lg border-2">
+        <div className="max-w-3xl mx-auto p-4">
+            <Card className="w-[85vw] p-0 border-0 shadow-none lg:w-[40vw]">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">
@@ -54,10 +54,10 @@ export default function Quiz({task}) {
                 <CardContent className="pb-2">
                     <div className="space-y-6">
                         <h2 className="mb-0 text-lg ">Question</h2>
-                        <h3 className="text-lg">{task.question}</h3>
+                        <h3 className="text-lg select-none">{task.question}</h3>
                         <RadioGroup
                             value={selectedOption}
-                            className="space-y-3"
+                            className="space-y-3 text-sm"
                         >
                             {task.options.map((option) => (
                                 <div
@@ -76,13 +76,13 @@ export default function Quiz({task}) {
                                     }`}
                                     onClick={() => handleOptionSelect(option)}
                                 >
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-border bg-white dark:bg-zinc-900 shrink-0">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-white dark:bg-zinc-900 shrink-0">
                                         <RadioGroupItem
                                             value={option}
                                             id={option}
                                             disabled={isAnswered}
                                             checked={selectedOption === option}
-                                            className="sr-only"
+                                            className="sr-only  text-sm"
                                         />
                                         {isAnswered &&
                                         option === task.answer ? (
@@ -92,7 +92,7 @@ export default function Quiz({task}) {
                                           option !== task.answer ? (
                                             <XCircle className="h-6 w-6 text-red-500" />
                                         ) : (
-                                            <span className="text-lg font-medium">
+                                            <span className="text-base font-medium">
                                                 {String.fromCharCode(
                                                     65 +
                                                         task.options.indexOf(
@@ -104,7 +104,7 @@ export default function Quiz({task}) {
                                     </div>
                                     <Label
                                         htmlFor={option}
-                                        className="flex-grow cursor-pointer ml-2 text-lg"
+                                        className="flex-grow cursor-pointer ml-2 text-sm"
                                     >
                                         {option}
                                     </Label>
@@ -130,36 +130,6 @@ export default function Quiz({task}) {
                         </div>
                     )}
                 </CardContent>
-
-                <CardFooter className="flex justify-between pt-2 pb-6">
-                    {!isAnswered ? (
-                        <Button
-                            onClick={checkAnswer}
-                            disabled={!selectedOption}
-                            className="w-full py-6 font-semibold"
-                        >
-                            Check Answer{" "}
-                            <ChevronRight className="ml-2 h-5 w-5" />
-                        </Button>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-4 w-full">
-                            <Button
-                                variant="outline"
-                                onClick={resetQuiz}
-                                className="flex items-center justify-center"
-                            >
-                                <RotateCcw className="mr-2 h-4 w-4" /> Try Again
-                            </Button>
-                            <Button
-                                variant="default"
-                                className="flex items-center justify-center"
-                            >
-                                Next Question{" "}
-                                <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </div>
-                    )}
-                </CardFooter>
             </Card>
         </div>
     );

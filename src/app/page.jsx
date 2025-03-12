@@ -27,7 +27,7 @@ export default function page() {
         <div className="max-w-6xl flex flex-col mb-96 gap-4 items-center p-4 mx-auto">
             <h1 className="text-2xl font-semibold self-start">YOUR COURSES </h1>
             <div className="flex gap-6 justify-center flex-wrap">
-                {loading &&
+                {loading ? (
                     Array(3)
                         .fill(0)
                         .map((_, i) => {
@@ -37,45 +37,58 @@ export default function page() {
                                     className={"w-[320px] h-64"}
                                 ></Skeleton>
                             );
-                        })}
-                {roadmaps.map((roadmap) => (
-                    <Card key={roadmap.id} className={"w-[320px] relative"}>
-                        <CardHeader>
-                            <CardTitle>
-                                {roadmap?.courseTitle?.split(":")[0] || ""}
-                            </CardTitle>
-                            <div className="absolute z-10 top-0 right-0">
-                                <DeleteRoadmap
-                                    id={roadmap.id}
-                                    onDelete={() => {
-                                        fetchRoadmaps();
-                                        hideLoader();
-                                    }}
-                                ></DeleteRoadmap>
-                            </div>
-                        </CardHeader>
-                        <CardContent>{roadmap.courseDescription}</CardContent>
+                        })
+                ) : (
+                    <>
+                        {roadmaps.map((roadmap) => (
+                            <Card
+                                key={roadmap.id}
+                                className={"w-[320px] relative"}
+                            >
+                                <CardHeader>
+                                    <CardTitle>
+                                        {roadmap?.courseTitle?.split(":")[0] ||
+                                            ""}
+                                    </CardTitle>
+                                    <div className="absolute z-10 top-0 right-0">
+                                        <DeleteRoadmap
+                                            id={roadmap.id}
+                                            onDelete={() => {
+                                                fetchRoadmaps();
+                                                hideLoader();
+                                            }}
+                                        ></DeleteRoadmap>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    {roadmap.courseDescription}
+                                </CardContent>
 
-                        <Link href={`/roadmap/${roadmap.id}`}>
-                            <span className="absolute inset-0"></span>
-                        </Link>
-                    </Card>
-                ))}
-                <Card
-                    className={
-                        "w-[320px] relative flex items-center justify-center"
-                    }
-                >
-                    <div className="flex flex-col items-center text-accent-foreground/70">
-                        <Plus strokeWidth={1} className="w-30 h-30"></Plus>
-                        <p className="text-lg text-center">
-                            Create your course
-                        </p>
-                    </div>
-                    <Link href={`/generate`} scroll={false}>
-                        <span className="absolute inset-0"></span>
-                    </Link>
-                </Card>
+                                <Link href={`/roadmap/${roadmap.id}`}>
+                                    <span className="absolute inset-0"></span>
+                                </Link>
+                            </Card>
+                        ))}
+                        <Card
+                            className={
+                                "w-[320px] relative flex items-center justify-center"
+                            }
+                        >
+                            <div className="flex flex-col items-center text-accent-foreground/70">
+                                <Plus
+                                    strokeWidth={1}
+                                    className="w-30 h-30"
+                                ></Plus>
+                                <p className="text-lg text-center">
+                                    Create your course
+                                </p>
+                            </div>
+                            <Link href={`/generate`} scroll={false}>
+                                <span className="absolute inset-0"></span>
+                            </Link>
+                        </Card>
+                    </>
+                )}
             </div>
         </div>
     );

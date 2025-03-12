@@ -133,35 +133,6 @@ const FillUps = ({ task }) => {
                         )}
                     </div>
                 </CardContent>
-
-                <CardFooter className="flex justify-between pt-2 pb-6">
-                    {!isAnswered ? (
-                        <Button
-                            onClick={checkAnswer}
-                            disabled={userAnswer.trim() === ""}
-                            className="w-full py-6 font-semibold"
-                        >
-                            Check Answer{" "}
-                            <ChevronRight className="ml-2 h-5 w-5" />
-                        </Button>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-4 w-full">
-                            <Button
-                                variant="outline"
-                                className="flex items-center justify-center"
-                            >
-                                <RotateCcw className="mr-2 h-4 w-4" /> Try Again
-                            </Button>
-                            <Button
-                                variant="default"
-                                className="flex items-center justify-center"
-                            >
-                                Next Question{" "}
-                                <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </div>
-                    )}
-                </CardFooter>
             </Card>
         </div>
     );

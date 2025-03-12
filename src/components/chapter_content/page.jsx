@@ -7,8 +7,7 @@ import Sidebar from "../sidebar/page";
 import MarkDown from "../MarkDown";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
-
+import TaskDecider from "../Tasks/TaskDecider";
 const Page = ({ chapter, roadmapId }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -20,11 +19,11 @@ const Page = ({ chapter, roadmapId }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isGenerating, setGenerating] = useState(false);
     const [error, setError] = useState(null);
+    const [tasks, setTasks] = useState([]);
     const [roadmap, setRoadmap] = useState({});
 
     async function getRoadmap() {
         try {
-            
             const response = await fetch(`/api/roadmap/${roadmapId}`);
             if (response.ok) {
                 const data = await response.json();
@@ -82,10 +81,14 @@ const Page = ({ chapter, roadmapId }) => {
 
                 const chapterData = await chapterResponse.json();
                 setChapterData(chapterData.text);
+                setTasks(data.chapter.content.tasks);
                 await addChapter(chapterData.text);
             } else if (response.ok) {
                 const data = await response.json();
                 setChapterData(data.chapter.content);
+                console.log(data.chapter.content);
+
+                setTasks(data.chapter.content.tasks);
             } else {
                 throw new Error(`Failed to fetch chapter: ${response.status}`);
             }
@@ -124,7 +127,10 @@ const Page = ({ chapter, roadmapId }) => {
     };
 
     const handleNext = () => {
-        if (selectedIndex < (chapterData?.subtopics?.length || 0) - 1) {
+        if (
+            selectedIndex <
+            (chapterData?.subtopics?.length || 0) + tasks?.length - 1
+        ) {
             const newIndex = selectedIndex + 1;
             setSelectedIndex(newIndex);
             updateUrl(newIndex);
@@ -185,7 +191,9 @@ const Page = ({ chapter, roadmapId }) => {
                 <div className="min-h-[calc(100vh-64px)] lg:w-[60vw] lg:ml-96 bg-background p-6 flex flex-col gap-2 items-center justify-center">
                     <Loader2 className="animate-spin"></Loader2>
                     <p className="text-lg text-center text-gray-500">
-                        {isGenerating ? "Please wait while we generate your chapter, first visit might take a while." : "Loading your chapter"}
+                        {isGenerating
+                            ? "Please wait while we generate your chapter, first visit might take a while."
+                            : "Loading your chapter"}
                     </p>
                 </div>
             </div>
@@ -257,112 +265,159 @@ const Page = ({ chapter, roadmapId }) => {
                         </h1>
                     )}
 
-                    <div className="mb-6">
-                        <div className="flex justify-between text-sm text-gray-500 mb-2">
-                            <span>
-                                Topic {selectedIndex + 1} of {subtopics.length}
-                            </span>
-                            <span>
-                                {Math.round(
-                                    ((selectedIndex + 1) / subtopics.length) *
-                                        100
-                                )}
-                                % complete
-                            </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                                className="bg-blue-600 h-2 rounded-full"
-                                style={{
-                                    width: `${
+                    {selectedIndex < chapterData.subtopics.length ? (
+                        <div className="mb-6">
+                            <div className="flex justify-between text-sm text-gray-500 mb-2">
+                                <span>
+                                    Topic {selectedIndex + 1} of{" "}
+                                    {subtopics.length}
+                                </span>
+                                <span>
+                                    {Math.round(
                                         ((selectedIndex + 1) /
                                             subtopics.length) *
-                                        100
-                                    }%`,
-                                }}
-                            ></div>
+                                            100
+                                    )}
+                                    % complete
+                                </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                    className="bg-blue-600 h-2 rounded-full"
+                                    style={{
+                                        width: `${
+                                            ((selectedIndex + 1) /
+                                                subtopics.length) *
+                                            100
+                                        }%`,
+                                    }}
+                                ></div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="mb-8">
-                        <h2 className="text-3xl font-bold mb-4">
-                            {currentTopic.title}
-                        </h2>
-                        <div className="text-lg">
-                            {currentTopic.content?.map((item, index) => {
-                                switch (item.type) {
-                                    case "header1":
-                                        return (
-                                            <h2
-                                                key={index}
-                                                className="text-3xl font-bold mt-6 mb-3"
-                                            >
-                                                {item.content}
-                                            </h2>
-                                        );
-                                    case "header2":
-                                        return (
-                                            <h2
-                                                key={index}
-                                                className="text-2xl font-bold mt-6 mb-3"
-                                            >
-                                                {item.content}
-                                            </h2>
-                                        );
-                                    case "header3":
-                                        return (
-                                            <h2
-                                                key={index}
-                                                className="text-xl font-bold mt-6 mb-3"
-                                            >
-                                                {item.content}
-                                            </h2>
-                                        );
-                                    case "para":
-                                        return (
-                                            <p
-                                                key={index}
-                                                className="mb-4 leading-relaxed"
-                                            >
-                                                {item.content}
-                                            </p>
-                                        );
-                                    case "code":
-                                        return (
-                                            <MarkDown
-                                                key={index}
-                                                content={item.content}
-                                            ></MarkDown>
-                                        );
-                                    case "points":
-                                        return (
-                                            <ul
-                                                key={index}
-                                                className="list-disc pl-6 mb-4 space-y-2"
-                                            >
-                                                {Array.isArray(item.content) &&
-                                                    item.content.map(
-                                                        (point, i) => (
-                                                            <li
-                                                                key={i}
-                                                                className="leading-relaxed"
-                                                            >
-                                                                <MarkDown
-                                                                    content={
-                                                                        point
-                                                                    }
-                                                                />
-                                                            </li>
-                                                        )
-                                                    )}
-                                            </ul>
-                                        );
-                                    default:
-                                        return null;
-                                }
-                            })}
+                    ) : (
+                        <div className="mb-6">
+                            <div className="flex justify-between text-sm text-gray-500 mb-2">
+                                <span>
+                                    Task {selectedIndex - subtopics.length + 1}{" "}
+                                    of {tasks.length}
+                                </span>
+                                <span>
+                                    {Math.round(
+                                        ((selectedIndex -
+                                            subtopics.length +
+                                            1) /
+                                            tasks.length) *
+                                            100
+                                    )}
+                                    % complete
+                                </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                    className="bg-blue-600 h-2 rounded-full"
+                                    style={{
+                                        width: `${
+                                            ((selectedIndex -
+                                                subtopics.length +
+                                                1) /
+                                                tasks.length) *
+                                            100
+                                        }%`,
+                                    }}
+                                ></div>
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    {selectedIndex < subtopics.length ? (
+                        <div className="mb-8">
+                            <h2 className="text-3xl font-bold mb-4">
+                                {currentTopic.title}
+                            </h2>
+                            <div className="text-lg">
+                                {currentTopic.content?.map((item, index) => {
+                                    switch (item.type) {
+                                        case "header1":
+                                            return (
+                                                <h2
+                                                    key={index}
+                                                    className="text-3xl font-bold mt-6 mb-3"
+                                                >
+                                                    {item.content}
+                                                </h2>
+                                            );
+                                        case "header2":
+                                            return (
+                                                <h2
+                                                    key={index}
+                                                    className="text-2xl font-bold mt-6 mb-3"
+                                                >
+                                                    {item.content}
+                                                </h2>
+                                            );
+                                        case "header3":
+                                            return (
+                                                <h2
+                                                    key={index}
+                                                    className="text-xl font-bold mt-6 mb-3"
+                                                >
+                                                    {item.content}
+                                                </h2>
+                                            );
+                                        case "para":
+                                            return (
+                                                <p
+                                                    key={index}
+                                                    className="mb-4 leading-relaxed"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: item.content,
+                                                    }}
+                                                ></p>
+                                            );
+                                        case "code":
+                                            return (
+                                                <MarkDown
+                                                    key={index}
+                                                    content={item.content}
+                                                ></MarkDown>
+                                            );
+                                        case "points":
+                                            return (
+                                                <ul
+                                                    key={index}
+                                                    className="list-disc pl-6 mb-4 space-y-2"
+                                                >
+                                                    {Array.isArray(
+                                                        item.content
+                                                    ) &&
+                                                        item.content.map(
+                                                            (point, i) => (
+                                                                <li
+                                                                    key={i}
+                                                                    className="leading-relaxed"
+                                                                >
+                                                                    <MarkDown
+                                                                        content={
+                                                                            point
+                                                                        }
+                                                                    />
+                                                                </li>
+                                                            )
+                                                        )}
+                                                </ul>
+                                            );
+                                        default:
+                                            return null;
+                                    }
+                                })}
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <TaskDecider
+                                task={tasks[selectedIndex - subtopics.length]}
+                            ></TaskDecider>
+                        </div>
+                    )}
 
                     {currentTopic.videoSuggestions &&
                         currentTopic.videoSuggestions.length > 0 && (
@@ -414,13 +469,22 @@ const Page = ({ chapter, roadmapId }) => {
                         <Button
                             onClick={handleNext}
                             variant={"outline"}
-                            disabled={selectedIndex >= subtopics.length - 1}
+                            disabled={
+                                selectedIndex >=
+                                subtopics.length + tasks.length - 1
+                            }
                             className={
-                                selectedIndex >= subtopics.length - 1 &&
+                                selectedIndex >=
+                                    subtopics.length + tasks.length - 1 &&
                                 "opacity-50 cursor-not-allowed"
                             }
                         >
-                            <span>Next</span>
+                            <span>
+                                {selectedIndex ===
+                                chapterData?.subtopics?.length - 1
+                                    ? "Go to task"
+                                    : "Next"}
+                            </span>
                             <ArrowRight className="h-5 w-5 ml-2" />
                         </Button>
                     </div>

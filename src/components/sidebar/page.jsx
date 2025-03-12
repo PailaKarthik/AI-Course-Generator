@@ -134,7 +134,7 @@ export default function Sidebar({ roadmap, id }) {
                                             expandedChapters[chapterIndex]
                                         }
                                     >
-                                        <span className="font-medium flex gap-1">
+                                        <span className="font-medium cursor-pointer flex gap-1">
                                             <span className="inline-block shrink-0 w-6 h-6 mr-2 text-xs text-center leading-6 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
                                                 {chapterIndex + 1}
                                             </span>
@@ -177,7 +177,7 @@ export default function Sidebar({ roadmap, id }) {
                                                                 )
                                                             }
                                                             className={`
-                              group flex items-center w-full px-3 py-2 rounded-md text-sm
+                              group flex items-center w-full px-3 py-2 cursor-pointer rounded-md text-sm
                               transition-colors duration-150 ease-in-out
                               ${
                                   isActive
