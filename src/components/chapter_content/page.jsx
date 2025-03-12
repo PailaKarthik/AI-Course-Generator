@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Sidebar from "../sidebar/page";
-import MarkDown from "../MarkDown";
 import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
 import TaskDecider from "../Tasks/TaskDecider";
+import Content from "./Content";
+import ChapterNotFound from "./ChapterNotFound";
+import ChapterError from "./ChapterError";
+import ChapterLoading from "./ChapterLoading";
+
 const Page = ({ chapter, roadmapId }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -86,8 +88,6 @@ const Page = ({ chapter, roadmapId }) => {
             } else if (response.ok) {
                 const data = await response.json();
                 setChapterData(data.chapter.content);
-                console.log(data.chapter.content);
-
                 setTasks(data.chapter.content.tasks);
             } else {
                 throw new Error(`Failed to fetch chapter: ${response.status}`);
@@ -186,55 +186,19 @@ const Page = ({ chapter, roadmapId }) => {
 
     if (isLoading) {
         return (
-            <div>
-                <Sidebar roadmap={roadmap} id={roadmapId} />
-                <div className="min-h-[calc(100vh-64px)] lg:w-[60vw] lg:ml-96 bg-background p-6 flex flex-col gap-2 items-center justify-center">
-                    <Loader2 className="animate-spin"></Loader2>
-                    <p className="text-lg text-center text-gray-500">
-                        {isGenerating
-                            ? "Please wait while we generate your chapter, first visit might take a while."
-                            : "Loading your chapter"}
-                    </p>
-                </div>
-            </div>
+            <ChapterLoading
+                roadmap={roadmap}
+                roadmapId={roadmapId}
+                isGenerating={isGenerating}
+            ></ChapterLoading>
         );
     }
 
     if (error) {
-        return (
-            <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-xl text-red-500 mb-4">{error}</p>
-                    <button
-                        onClick={() => fetchChapter()}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        Try Again
-                    </button>
-                </div>
-            </div>
-        );
+        return <ChapterError fetchChapter={fetchChapter} />;
     }
-
     if (notFound) {
-        return (
-            <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4">
-                        Chapter Not Found
-                    </h2>
-                    <p className="mb-6">
-                        The chapter you're looking for doesn't exist.
-                    </p>
-                    <Link
-                        href={`/roadmap/${roadmapId}`}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                        Return to Roadmap
-                    </Link>
-                </div>
-            </div>
-        );
+        return <ChapterNotFound roadmapId={roadmapId} />;
     }
 
     if (
@@ -329,88 +293,7 @@ const Page = ({ chapter, roadmapId }) => {
                         </div>
                     )}
                     {selectedIndex < subtopics.length ? (
-                        <div className="mb-8">
-                            <h2 className="text-3xl font-bold mb-4">
-                                {currentTopic.title}
-                            </h2>
-                            <div className="text-lg">
-                                {currentTopic.content?.map((item, index) => {
-                                    switch (item.type) {
-                                        case "header1":
-                                            return (
-                                                <h2
-                                                    key={index}
-                                                    className="text-3xl font-bold mt-6 mb-3"
-                                                >
-                                                    {item.content}
-                                                </h2>
-                                            );
-                                        case "header2":
-                                            return (
-                                                <h2
-                                                    key={index}
-                                                    className="text-2xl font-bold mt-6 mb-3"
-                                                >
-                                                    {item.content}
-                                                </h2>
-                                            );
-                                        case "header3":
-                                            return (
-                                                <h2
-                                                    key={index}
-                                                    className="text-xl font-bold mt-6 mb-3"
-                                                >
-                                                    {item.content}
-                                                </h2>
-                                            );
-                                        case "para":
-                                            return (
-                                                <p
-                                                    key={index}
-                                                    className="mb-4 leading-relaxed"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item.content,
-                                                    }}
-                                                ></p>
-                                            );
-                                        case "code":
-                                            return (
-                                                <MarkDown
-                                                    key={index}
-                                                    content={item.content}
-                                                ></MarkDown>
-                                            );
-                                        case "points":
-                                            return (
-                                                <ul
-                                                    key={index}
-                                                    className="list-disc pl-6 mb-4 space-y-2"
-                                                >
-                                                    {Array.isArray(
-                                                        item.content
-                                                    ) &&
-                                                        item.content.map(
-                                                            (point, i) => (
-                                                                <li
-                                                                    key={i}
-                                                                    className="leading-relaxed"
-                                                                >
-                                                                    <MarkDown
-                                                                        content={
-                                                                            point
-                                                                        }
-                                                                    />
-                                                                </li>
-                                                            )
-                                                        )}
-                                                </ul>
-                                            );
-                                        default:
-                                            return null;
-                                    }
-                                })}
-                            </div>
-                        </div>
+                        <Content currentTopic={currentTopic}></Content>
                     ) : (
                         <div>
                             <TaskDecider
@@ -418,43 +301,6 @@ const Page = ({ chapter, roadmapId }) => {
                             ></TaskDecider>
                         </div>
                     )}
-
-                    {currentTopic.videoSuggestions &&
-                        currentTopic.videoSuggestions.length > 0 && (
-                            <div className="mb-12 p-4 bg-gray-50 rounded-lg">
-                                <h3 className="text-xl font-semibold mb-3">
-                                    Additional Resources
-                                </h3>
-                                <div className="space-y-2">
-                                    {currentTopic.videoSuggestions.map(
-                                        (video, idx) => (
-                                            <p
-                                                key={idx}
-                                                className="flex items-center"
-                                            >
-                                                <span className="mr-2">📹</span>
-                                                <Link
-                                                    href={video}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
-                                                >
-                                                    {video.includes(
-                                                        "youtube.com"
-                                                    ) ||
-                                                    video.includes("youtu.be")
-                                                        ? "Watch YouTube tutorial"
-                                                        : "View resource"}{" "}
-                                                    {idx > 0
-                                                        ? `#${idx + 1}`
-                                                        : ""}
-                                                </Link>
-                                            </p>
-                                        )
-                                    )}
-                                </div>
-                            </div>
-                        )}
 
                     <div className="flex justify-between mt-12 mb-4">
                         <Button

@@ -13,8 +13,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckCircle, XCircle, ChevronRight, RotateCcw } from "lucide-react";
 
-
-export default function Quiz({task}) {
+export default function Quiz({ task }) {
     const [selectedOption, setSelectedOption] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -130,6 +129,16 @@ export default function Quiz({task}) {
                         </div>
                     )}
                 </CardContent>
+                <CardFooter>
+                    {!isAnswered && (
+                        <Button
+                            className={"w-full"}
+                            onClick={checkAnswer}
+                        >
+                            Check Answer
+                        </Button>
+                    )}
+                </CardFooter>
             </Card>
         </div>
     );

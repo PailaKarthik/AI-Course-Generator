@@ -133,6 +133,16 @@ const FillUps = ({ task }) => {
                         )}
                     </div>
                 </CardContent>
+                <CardFooter>
+                    {!isAnswered && (
+                        <Button
+                            className={"w-full"}
+                            onClick={checkAnswer}
+                        >
+                            Check Answer
+                        </Button>
+                    )}
+                </CardFooter>
             </Card>
         </div>
     );
