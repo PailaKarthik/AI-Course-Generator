@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChapterError = ({ fetchChapter }) => {
+const ChapterError = ({ fetchChapter, error }) => {
     return (
         <div className="min-h-screen bg-background p-6 flex items-center justify-center">
             <div className="text-center">

@@ -32,6 +32,7 @@ const Page = ({ chapter, roadmapId }) => {
                 setRoadmap(data);
                 return data;
             }
+
             console.error("Roadmap not found");
             return null;
         } catch (error) {
@@ -83,7 +84,8 @@ const Page = ({ chapter, roadmapId }) => {
 
                 const chapterData = await chapterResponse.json();
                 setChapterData(chapterData.text);
-                setTasks(data.chapter.content.tasks);
+                console.log(chapterData.text);
+                setTasks(chapterData.text.tasks);
                 await addChapter(chapterData.text);
             } else if (response.ok) {
                 const data = await response.json();
@@ -161,7 +163,7 @@ const Page = ({ chapter, roadmapId }) => {
             if (
                 !isNaN(parsedIndex) &&
                 parsedIndex >= 0 &&
-                parsedIndex < chapterData.subtopics.length
+                parsedIndex < chapterData.subtopics.length + tasks.length
             ) {
                 setSelectedIndex(parsedIndex);
             }
@@ -181,6 +183,27 @@ const Page = ({ chapter, roadmapId }) => {
     }, [roadmapId, chapter]);
 
     useEffect(() => {
+        const ch = roadmap.chapters?.find(
+            (e) => e.chapterNumber === Number(chapter)
+        );
+        const rm = { ...roadmap };
+        for (const element of tasks) {
+            const type = element.type.split("-");
+            let displayType = "";
+            for (const word of type) {
+                displayType += word[0].toUpperCase() + word.slice(1) + " ";
+            }
+            if (rm.chapters) {
+                rm.chapters[Number(chapter - 1)].contentOutline.length <= //condition to resolve duplicate render issue
+                    chapterData.subtopics.length + tasks.length &&
+                    rm.chapters[Number(chapter - 1)]?.contentOutline.push(
+                        `Task > ${displayType}`
+                    );
+            }
+        }
+    }, [roadmap]);
+
+    useEffect(() => {
         getRoadmap();
     }, []);
 
@@ -195,7 +218,7 @@ const Page = ({ chapter, roadmapId }) => {
     }
 
     if (error) {
-        return <ChapterError fetchChapter={fetchChapter} />;
+        return <ChapterError fetchChapter={fetchChapter} error={error} />;
     }
     if (notFound) {
         return <ChapterNotFound roadmapId={roadmapId} />;
