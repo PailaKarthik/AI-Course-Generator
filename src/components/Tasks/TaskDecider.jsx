@@ -1,16 +1,18 @@
 import FillUps from "./FillUps";
 import Quiz from "./Quiz";
-import Code from "./Code";
+import Match from "./Match";
 
 const TaskDecider = ({ task }) => {
+    console.log(task);
+    
     return (
-        <div className="mx-auto w-max">
+        <div className="">
             {task.type === "fill-in-the-blank" ? (
                 <FillUps task={task} />
             ) : task.type === "multiple-choice" ? (
                 <Quiz task={task} />
-            ) : task.type === "code " ? (
-                <Code task={task} />
+            ) : task.type === "match-the-following" ? (
+                <Match task={task} />
             ) : (
                 ""
             )}

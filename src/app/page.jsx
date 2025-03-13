@@ -40,7 +40,7 @@ export default function page() {
                         })
                 ) : (
                     <>
-                        {roadmaps.map((roadmap) => (
+                        {roadmaps?.map((roadmap) => (
                             <Card
                                 key={roadmap.id}
                                 className={"w-[320px] relative"}

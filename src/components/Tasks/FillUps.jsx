@@ -52,7 +52,7 @@ const FillUps = ({ task }) => {
 
     return (
         <div className="w-full mx-auto p-4">
-            <Card className="shadow-lg w-[92vw] max-w-3xl border-2 gap-4">
+            <Card className="shadow-lg max-w-3xl border-2 gap-4">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">

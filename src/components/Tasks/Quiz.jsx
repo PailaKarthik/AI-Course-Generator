@@ -40,8 +40,8 @@ export default function Quiz({ task }) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
-            <Card className="w-[85vw] p-0 border-0 shadow-none lg:w-[40vw]">
+        <div>
+            <Card className="p-0 border-0 mx-auto shadow-none lg:w-[40vw]">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">

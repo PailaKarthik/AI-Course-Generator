@@ -201,7 +201,7 @@ const Page = ({ chapter, roadmapId }) => {
                     );
             }
         }
-    }, [roadmap]);
+    }, [roadmap, tasks]);
 
     useEffect(() => {
         getRoadmap();
@@ -245,9 +245,9 @@ const Page = ({ chapter, roadmapId }) => {
         <div className="min-h-[calc(100vh-64px)] bg-background ">
             <div className="flex flex-col md:flex-row">
                 <Sidebar roadmap={roadmap} id={roadmapId} />
-                <div className="flex-1 p-8 lg:ml-96 w-[96vw] lg:w-[60vw] max-sm:p-4 bg-background ">
+                <div className="flex-1 p-8 lg:ml-96 lg:w-[60vw] max-sm:p-4 bg-background ">
                     {chapterData.chapterTitle && (
-                        <h1 className="text-4xl font-bold mb-4 w-[80vw]">
+                        <h1 className="text-4xl font-bold mb-4">
                             {chapterData.chapterTitle}
                         </h1>
                     )}

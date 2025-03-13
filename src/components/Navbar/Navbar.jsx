@@ -45,7 +45,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="p-2 w-full border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
+    <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
       <div className="flex w-full justify-between px-3 lg:px-10 items-center">
         {sidebar && (
           <div className="w-[360px] h-screen bg-black text-white fixed top-0 left-0 flex flex-col gap-4 p-4">
