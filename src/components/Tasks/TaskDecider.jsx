@@ -3,8 +3,6 @@ import Quiz from "./Quiz";
 import Match from "./Match";
 
 const TaskDecider = ({ task }) => {
-    console.log(task);
-    
     return (
         <div className="">
             {task.type === "fill-in-the-blank" ? (

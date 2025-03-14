@@ -194,7 +194,7 @@ const Page = ({ chapter, roadmapId }) => {
                 displayType += word[0].toUpperCase() + word.slice(1) + " ";
             }
             if (rm.chapters) {
-                rm.chapters[Number(chapter - 1)].contentOutline.length <= //condition to resolve duplicate render issue
+                rm.chapters[Number(chapter - 1)].contentOutline.length < //condition to resolve duplicate render issue
                     chapterData.subtopics.length + tasks.length &&
                     rm.chapters[Number(chapter - 1)]?.contentOutline.push(
                         `Task > ${displayType}`
