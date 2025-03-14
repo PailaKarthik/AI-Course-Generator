@@ -183,10 +183,7 @@ const Page = ({ chapter, roadmapId }) => {
     }, [roadmapId, chapter]);
 
     useEffect(() => {
-        const ch = roadmap.chapters?.find(
-            (e) => e.chapterNumber === Number(chapter)
-        );
-        const rm = { ...roadmap };
+        const rm = { ...roadmap }; //temporary variable to hold roadmap
         for (const element of tasks) {
             const type = element.type.split("-");
             let displayType = "";

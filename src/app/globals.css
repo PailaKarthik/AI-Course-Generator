@@ -133,12 +133,12 @@
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: #0178ff;
+  background: #0971e8;
   position: absolute;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb:hover {
-  background: #0178ff; 
+  background: #0971e8; 
 }
 
 body {
