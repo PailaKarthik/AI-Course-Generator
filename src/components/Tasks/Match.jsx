@@ -106,9 +106,9 @@ export default function Match({task}) {
                     toJSON: () => {},
                 };
 
-                let color = "
+                let color = "#0971e8"; 
                 if (submitted) {
-                    color = isCorrect[leftIndex] ? "
+                    color = isCorrect[leftIndex] ? "#22c55e" : "#ef4444"; 
                 }
 
                 newLines.push({ from, to, color });
@@ -258,7 +258,7 @@ export default function Match({task}) {
                         })}
                     </svg>
 
-                    <div className="flex gap-6 justify-center md:gap-16">
+                    <div className="flex gap-6 justify-centermd:gap-16">
                         
                         <div className="space-y-4">
                             {task.terms.lhs.map((term, index) => (
