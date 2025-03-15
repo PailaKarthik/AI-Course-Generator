@@ -11,26 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-
-const task = {
-    terms: {
-        lhs: [
-            "Inductive Reactance (XL)",
-            "Capacitive Reactance (XC)",
-            "Impedance (Z)",
-        ],
-        rhs: [
-            "Opposition to current flow due to capacitance.",
-            "Total opposition to current flow in an AC circuit.",
-            "Opposition to current flow due to inductance.",
-        ],
-    },
-    answer: [2, 0, 1],
-    explanation:
-        "Inductive reactance is due to inductance, capacitive reactance is due to capacitance, and impedance is the total opposition to current in an AC circuit.",
-};
-
-export default function Match({task}) {
+export default function Match({ task }) {
     const [selectedLeft, setSelectedLeft] = useState(null);
     const [selectedRight, setSelectedRight] = useState(null);
     const [matches, setMatches] = useState(
@@ -45,19 +26,11 @@ export default function Match({task}) {
     const rightRefs = useRef([]);
     const containerRef = useRef(null);
 
-    
     useEffect(() => {
-        leftRefs.current = leftRefs.current.slice(
-            0,
-            task.terms.lhs.length
-        );
-        rightRefs.current = rightRefs.current.slice(
-            0,
-            task.terms.rhs.length
-        );
+        leftRefs.current = leftRefs.current.slice(0, task.terms.lhs.length);
+        rightRefs.current = rightRefs.current.slice(0, task.terms.rhs.length);
     }, []);
 
-    
     useEffect(() => {
         updateLines();
         window.addEventListener("resize", updateLines);
@@ -81,7 +54,6 @@ export default function Match({task}) {
                 const rightRect =
                     rightRefs.current[rightIndex].getBoundingClientRect();
 
-                
                 const from = {
                     x: leftRect.right - containerRect.left,
                     y: leftRect.top + leftRect.height / 2 - containerRect.top,
@@ -106,9 +78,9 @@ export default function Match({task}) {
                     toJSON: () => {},
                 };
 
-                let color = "#0971e8"; 
+                let color = "#0971e8";
                 if (submitted) {
-                    color = isCorrect[leftIndex] ? "#22c55e" : "#ef4444"; 
+                    color = isCorrect[leftIndex] ? "#22c55e" : "#ef4444";
                 }
 
                 newLines.push({ from, to, color });
@@ -122,7 +94,6 @@ export default function Match({task}) {
         if (submitted) return;
         setSelectedLeft(index);
 
-        
         if (selectedRight !== null) {
             createMatch(index, selectedRight);
         }
@@ -132,23 +103,19 @@ export default function Match({task}) {
         if (submitted) return;
         setSelectedRight(index);
 
-        
         if (selectedLeft !== null) {
             createMatch(selectedLeft, index);
         }
     };
 
     const createMatch = (leftIndex, rightIndex) => {
-        
         const newMatches = [...matches];
 
-        
         const existingMatchIndex = matches.indexOf(rightIndex);
         if (existingMatchIndex !== -1) {
             newMatches[existingMatchIndex] = -1;
         }
 
-        
         if (newMatches[leftIndex] !== -1) {
             newMatches[leftIndex] = -1;
         }
@@ -156,7 +123,6 @@ export default function Match({task}) {
         newMatches[leftIndex] = rightIndex;
         setMatches(newMatches);
 
-        
         setSelectedLeft(null);
         setSelectedRight(null);
     };
@@ -169,16 +135,13 @@ export default function Match({task}) {
     };
 
     const handleSubmit = () => {
-        
         if (matches.includes(-1)) {
             alert("Please match all items before submitting");
             return;
         }
 
-        
         const correctAnswers = task.answer;
 
-        
         const correctnessArray = matches.map((rightIndex, leftIndex) => {
             return correctAnswers[leftIndex] === rightIndex;
         });
@@ -197,7 +160,6 @@ export default function Match({task}) {
         setSelectedRight(null);
     };
 
-    
     const getLeftItemColor = (index) => {
         if (submitted) {
             return isCorrect[index]
@@ -211,7 +173,6 @@ export default function Match({task}) {
         return "bg-background";
     };
 
-    
     const getRightItemColor = (index) => {
         if (submitted) {
             const leftIndex = matches.indexOf(index);
@@ -235,10 +196,8 @@ export default function Match({task}) {
             </CardHeader>
             <CardContent>
                 <div className="relative" ref={containerRef}>
-                    
                     <svg className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
                         {lines.map((line, index) => {
-                            
                             const controlPointX1 =
                                 line.from.right +
                                 (line.to.left - line.from.right) * 0.4;
@@ -258,8 +217,7 @@ export default function Match({task}) {
                         })}
                     </svg>
 
-                    <div className="flex gap-6 justify-centermd:gap-16">
-                        
+                    <div className="flex gap-6 justify-center md:gap-16">
                         <div className="space-y-4">
                             {task.terms.lhs.map((term, index) => (
                                 <div
@@ -289,24 +247,21 @@ export default function Match({task}) {
                             ))}
                         </div>
 
-                        
                         <div className="space-y-4">
-                            {task.terms.rhs.map(
-                                (definition, index) => (
-                                    <div
-                                        key={`right-${index}`}
-                                        ref={(el) =>
-                                            (rightRefs.current[index] = el)
-                                        }
-                                        className={`p-3 border rounded-lg cursor-pointer transition-colors ${getRightItemColor(
-                                            index
-                                        )}`}
-                                        onClick={() => handleRightSelect(index)}
-                                    >
-                                        {definition}
-                                    </div>
-                                )
-                            )}
+                            {task.terms.rhs.map((definition, index) => (
+                                <div
+                                    key={`right-${index}`}
+                                    ref={(el) =>
+                                        (rightRefs.current[index] = el)
+                                    }
+                                    className={`p-3 border rounded-lg cursor-pointer transition-colors ${getRightItemColor(
+                                        index
+                                    )}`}
+                                    onClick={() => handleRightSelect(index)}
+                                >
+                                    {definition}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -322,11 +277,11 @@ export default function Match({task}) {
                     </Alert>
                 )}
             </CardContent>
-            <CardFooter className="flex justify-end gap-2">
+            <CardFooter className="flex justify-center gap-2">
                 {submitted ? (
-                    <Button onClick={handleReset}>Try Again</Button>
+                    <Button variant={"secondary"} onClick={handleReset}>Try Again</Button>
                 ) : (
-                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button variant={"secondary"} onClick={handleSubmit} className={"bg-blue-500 text-zinc-50 dark:bg-blue-700/50 hover:bg-blue-600 dark:hover:bg-blue-600"}>Submit</Button>
                 )}
             </CardFooter>
         </Card>

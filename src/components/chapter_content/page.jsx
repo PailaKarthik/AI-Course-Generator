@@ -9,6 +9,7 @@ import Content from "./Content";
 import ChapterNotFound from "./ChapterNotFound";
 import ChapterError from "./ChapterError";
 import ChapterLoading from "./ChapterLoading";
+import { toast } from "sonner";
 
 const Page = ({ chapter, roadmapId }) => {
     const searchParams = useSearchParams();
@@ -33,11 +34,12 @@ const Page = ({ chapter, roadmapId }) => {
                 return data;
             }
 
-            console.error("Roadmap not found");
+            toast.error("Roadmap not found");
             return null;
         } catch (error) {
-            console.error("Error fetching roadmap:", error);
+            console.error("Error fetching roadmap", error);
             setError("Failed to fetch roadmap data. Please try again later.");
+            toast.error("Failed to fetch roadmap data. Please try again later.");
             return null;
         }
     }

@@ -4,7 +4,7 @@ import Match from "./Match";
 
 const TaskDecider = ({ task }) => {
     return (
-        <div className="">
+        <div>
             {task.type === "fill-in-the-blank" ? (
                 <FillUps task={task} />
             ) : task.type === "multiple-choice" ? (

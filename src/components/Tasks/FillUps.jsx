@@ -51,8 +51,8 @@ const FillUps = ({ task }) => {
     };
 
     return (
-        <div className="w-full mx-auto p-4">
-            <Card className="max-w-3xl gap-4 border-0 shadow-none">
+        <div className="w-full p-4">
+            <Card className="max-w-3xl gap-4 mx-auto border-0 shadow-none">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">
