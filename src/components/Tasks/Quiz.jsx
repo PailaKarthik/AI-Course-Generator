@@ -11,20 +11,21 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Quiz({ task, roadmapId, chapterNumber }) {
     const [selectedOption, setSelectedOption] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
-
+    const [submitting, setSubmitting] = useState(false);
     const handleOptionSelect = (value) => {
         if (isAnswered) return;
         setSelectedOption(value);
     };
 
     const checkAnswer = async () => {
+        setSubmitting(true)
         const isCorrect = selectedOption === task.answer;
         const res = await fetch(`/api/tasks`, {
             method: "POST",
@@ -45,6 +46,7 @@ export default function Quiz({ task, roadmapId, chapterNumber }) {
         } else {
             toast.error("Failed to submit task, Try again.");
         }
+        setSubmitting(false)
     };
 
     useEffect(() => {
@@ -129,56 +131,61 @@ export default function Quiz({ task, roadmapId, chapterNumber }) {
                     </div>
 
                     {isAnswered && (
-                            <div>
-                                <div className="flex items-center mt-4">
-                                    <div className="flex-shrink-0 mr-3">
-                                        {isCorrect ? (
-                                            <CheckCircle className="h-6 w-6 text-green-500" />
-                                        ) : (
-                                            <XCircle className="h-6 w-6 text-red-500" />
-                                        )}
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold">
-                                            {isCorrect
-                                                ? "Correct!"
-                                                : "Incorrect!"}
-                                        </div>
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                                            {isCorrect
-                                                ? "Great job!"
-                                                : `The correct answer is: ${task.answer}`}
-                                        </div>
-                                    </div>
+                        <div>
+                            <div className="flex items-center mt-4">
+                                <div className="flex-shrink-0 mr-3">
+                                    {isCorrect ? (
+                                        <CheckCircle className="h-6 w-6 text-green-500" />
+                                    ) : (
+                                        <XCircle className="h-6 w-6 text-red-500" />
+                                    )}
                                 </div>
-                                <div className="mt-6 space-y-4 animate-fadeIn">
-                                    <div
-                                        className={`p-4 rounded-lg border-l-4 ${
-                                            isCorrect
-                                                ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
-                                                : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
-                                        }`}
-                                    >
-                                        <div className="font-bold text-lg mb-1">
-                                            Explanation
-                                        </div>
-                                        <p>{task.explanation}</p>
+                                <div>
+                                    <div className="font-semibold">
+                                        {isCorrect ? "Correct!" : "Incorrect!"}
+                                    </div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        {isCorrect
+                                            ? "Great job!"
+                                            : `The correct answer is: ${task.answer}`}
                                     </div>
                                 </div>
                             </div>
-                        )}
+                            <div className="mt-6 space-y-4 animate-fadeIn">
+                                <div
+                                    className={`p-4 rounded-lg border-l-4 ${
+                                        isCorrect
+                                            ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
+                                            : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
+                                    }`}
+                                >
+                                    <div className="font-bold text-lg mb-1">
+                                        Explanation
+                                    </div>
+                                    <p>{task.explanation}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
                 <CardFooter>
                     {!isAnswered && (
                         <Button
-                            disabled={!selectedOption}
+                            disabled={!selectedOption || submitting}
                             variant={"secondary"}
                             className={
                                 "bg-blue-500 text-zinc-50 mx-auto dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
                             }
                             onClick={checkAnswer}
                         >
-                            Submit
+                            {submitting ? (
+                                <>
+                                    Submit
+                                    <Loader className="animate-spin"></Loader>{" "}
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     )}
                 </CardFooter>

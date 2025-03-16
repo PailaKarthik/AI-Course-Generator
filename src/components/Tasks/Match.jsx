@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 export default function Match({ task, roadmapId, chapterNumber }) {
     const [selectedLeft, setSelectedLeft] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
     const [selectedRight, setSelectedRight] = useState(null);
     const [matches, setMatches] = useState(
         Array(task.terms.lhs.length).fill(-1)
@@ -146,7 +148,7 @@ export default function Match({ task, roadmapId, chapterNumber }) {
             toast.warning("Please match all items before submitting");
             return;
         }
-
+        setSubmitting(true);
         const correctAnswers = task.answer;
 
         const correctnessArray = matches.map((rightIndex, leftIndex) => {
@@ -173,6 +175,7 @@ export default function Match({ task, roadmapId, chapterNumber }) {
         } else {
             toast.error("Failed to submit task, Try again.");
         }
+        setSubmitting(false);
     };
 
     const getLeftItemColor = (index) => {
@@ -297,11 +300,19 @@ export default function Match({ task, roadmapId, chapterNumber }) {
                     <Button
                         variant={"secondary"}
                         onClick={handleSubmit}
+                        disabled={submitting}
                         className={
                             "bg-blue-500 text-zinc-50 dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
                         }
                     >
-                        Submit
+                        {submitting ? (
+                            <>
+                                Submitting
+                                <Loader className="animate-spin"></Loader>
+                            </>
+                        ) : (
+                            "Submit"
+                        )}
                     </Button>
                 )}
             </CardFooter>

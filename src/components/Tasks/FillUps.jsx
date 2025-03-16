@@ -10,12 +10,13 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { toast } from "sonner";
 
 const FillUps = ({ task, roadmapId, chapterNumber }) => {
     const [userAnswer, setUserAnswer] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
 
     const handleInputChange = (e) => {
@@ -25,6 +26,7 @@ const FillUps = ({ task, roadmapId, chapterNumber }) => {
 
     const checkAnswer = async () => {
         let isCorrect = false;
+        setSubmitting(true);
         const normalizedUserAnswer = task.caseSensitive
             ? userAnswer.trim()
             : userAnswer.trim().toLowerCase();
@@ -55,6 +57,7 @@ const FillUps = ({ task, roadmapId, chapterNumber }) => {
         } else {
             toast.error("Failed to submit task, Try again.");
         }
+        setSubmitting(false);
     };
 
     useEffect(() => {
@@ -157,9 +160,16 @@ const FillUps = ({ task, roadmapId, chapterNumber }) => {
                                 "bg-blue-500 text-zinc-50 mx-auto dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
                             }
                             onClick={checkAnswer}
-                            disabled={!userAnswer}
+                            disabled={!userAnswer || submitting}
                         >
-                            Check Answer
+                            {submitting ? (
+                                <>
+                                    Submitting
+                                    <Loader className="animate-spin"></Loader>
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     )}
                 </CardFooter>

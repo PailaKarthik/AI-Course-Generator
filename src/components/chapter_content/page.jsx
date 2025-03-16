@@ -10,12 +10,12 @@ import ChapterNotFound from "./ChapterNotFound";
 import ChapterError from "./ChapterError";
 import ChapterLoading from "./ChapterLoading";
 import { toast } from "sonner";
+import { loader } from "../ui/Custom/ToastLoader";
 
 const Page = ({ chapter, roadmapId }) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const subtopicParam = searchParams.get("subtopic");
-
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [chapterData, setChapterData] = useState(null);
     const [notFound, setNotFound] = useState(false);
@@ -24,6 +24,7 @@ const Page = ({ chapter, roadmapId }) => {
     const [error, setError] = useState(null);
     const [tasks, setTasks] = useState([]);
     const [roadmap, setRoadmap] = useState({});
+    const { showLoader, hideLoader } = loader();
 
     async function getRoadmap() {
         try {
@@ -143,6 +144,20 @@ const Page = ({ chapter, roadmapId }) => {
             setSelectedIndex(newIndex);
             updateUrl(newIndex);
             window.scrollTo(0, 0);
+        } else if (
+            selectedIndex ===
+                chapterData?.subtopics?.length + tasks?.length - 1 &&
+            chapter < roadmap.chapters.length
+        ) {
+            showLoader();
+            const params = new URLSearchParams(searchParams);
+            params.set("subtopic", 0);
+            router.push(
+                `/chapter-test/${roadmapId}/${
+                    Number(chapter) + 1
+                }/?${params.toString()}`,
+                { scroll: false }
+            );
         }
     };
 
@@ -208,6 +223,7 @@ const Page = ({ chapter, roadmapId }) => {
 
     useEffect(() => {
         getRoadmap();
+        hideLoader();
     }, []);
 
     if (isLoading) {
@@ -344,19 +360,21 @@ const Page = ({ chapter, roadmapId }) => {
                             onClick={handleNext}
                             variant={"outline"}
                             disabled={
-                                selectedIndex >=
-                                subtopics.length + tasks.length - 1
-                            }
-                            className={
-                                selectedIndex >=
-                                    subtopics.length + tasks.length - 1 &&
-                                "opacity-50 cursor-not-allowed"
+                                selectedIndex ===
+                                    chapterData?.subtopics?.length +
+                                        tasks?.length -
+                                        1 && chapter >= roadmap.chapters.length
                             }
                         >
                             <span>
                                 {selectedIndex ===
                                 chapterData?.subtopics?.length - 1
                                     ? "Go to task"
+                                    : selectedIndex ===
+                                      chapterData?.subtopics?.length +
+                                          tasks?.length -
+                                          1
+                                    ? "Next Chapter"
                                     : "Next"}
                             </span>
                             <ArrowRight className="h-5 w-5 ml-2" />
