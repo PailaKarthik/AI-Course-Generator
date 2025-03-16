@@ -39,7 +39,9 @@ const Page = ({ chapter, roadmapId }) => {
         } catch (error) {
             console.error("Error fetching roadmap", error);
             setError("Failed to fetch roadmap data. Please try again later.");
-            toast.error("Failed to fetch roadmap data. Please try again later.");
+            toast.error(
+                "Failed to fetch roadmap data. Please try again later."
+            );
             return null;
         }
     }
@@ -92,7 +94,9 @@ const Page = ({ chapter, roadmapId }) => {
             } else if (response.ok) {
                 const data = await response.json();
                 setChapterData(data.chapter.content);
-                setTasks(data.chapter.content.tasks);
+                console.log(data.chapter.tasks);
+
+                setTasks(data.chapter.tasks);
             } else {
                 throw new Error(`Failed to fetch chapter: ${response.status}`);
             }
@@ -319,6 +323,8 @@ const Page = ({ chapter, roadmapId }) => {
                     ) : (
                         <div>
                             <TaskDecider
+                                roadmapId={roadmapId}
+                                chapterNumber={chapter}
                                 task={tasks[selectedIndex - subtopics.length]}
                             ></TaskDecider>
                         </div>

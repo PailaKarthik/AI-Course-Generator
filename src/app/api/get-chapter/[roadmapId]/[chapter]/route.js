@@ -7,7 +7,10 @@ export async function GET(req, { params }) {
     try {
         const session = await auth();
         if (!session) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
         }
 
         const { roadmapId, chapter } = await params;
@@ -21,14 +24,32 @@ export async function GET(req, { params }) {
             chapter
         );
 
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
-            return NextResponse.json({ message: "Chapter not found" }, { status: 404 });
-        }
+        const taskDocRef = doc(
+            db,
+            "users",
+            session.user.email,
+            "roadmaps",
+            roadmapId,
+            "chapters",
+            chapter,
+            "tasks",
+            "task"
+        );
 
-        return NextResponse.json({ chapter: docSnap.data() });
+        const docSnap = await getDoc(docRef);
+        const taskSnap = await getDoc(taskDocRef);
+        if (!docSnap.exists() || !taskSnap.exists()) {
+            return NextResponse.json(
+                { message: "Chapter not found" },
+                { status: 404 }
+            );
+        }
+        const tasks = Object.values(taskSnap.data())
+
+        return NextResponse.json({
+            chapter: { ...docSnap.data(), tasks },
+        });
     } catch (error) {
-        return NextResponse.json({ message: error.message }, { status: 500 }); 
+        return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }
-

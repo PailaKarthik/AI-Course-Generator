@@ -10,8 +10,9 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
-export default function Match({ task }) {
+export default function Match({ task, roadmapId, chapterNumber }) {
     const [selectedLeft, setSelectedLeft] = useState(null);
     const [selectedRight, setSelectedRight] = useState(null);
     const [matches, setMatches] = useState(
@@ -29,6 +30,12 @@ export default function Match({ task }) {
     useEffect(() => {
         leftRefs.current = leftRefs.current.slice(0, task.terms.lhs.length);
         rightRefs.current = rightRefs.current.slice(0, task.terms.rhs.length);
+        if (task.isAnswered) {
+            setIsCorrect(task.isCorrect);
+            setScore(task.isCorrect.filter(Boolean).length);
+            setMatches(task.userAnswer);
+            setSubmitted(task.isAnswered);
+        }
     }, []);
 
     useEffect(() => {
@@ -134,9 +141,9 @@ export default function Match({ task }) {
         setMatches(newMatches);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (matches.includes(-1)) {
-            alert("Please match all items before submitting");
+            toast.warning("Please match all items before submitting");
             return;
         }
 
@@ -146,18 +153,26 @@ export default function Match({ task }) {
             return correctAnswers[leftIndex] === rightIndex;
         });
 
-        setIsCorrect(correctnessArray);
-        setScore(correctnessArray.filter(Boolean).length);
-        setSubmitted(true);
-    };
-
-    const handleReset = () => {
-        setMatches(Array(task.terms.lhs.length).fill(-1));
-        setSubmitted(false);
-        setIsCorrect([]);
-        setScore(0);
-        setSelectedLeft(null);
-        setSelectedRight(null);
+        const res = await fetch(`/api/tasks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                task,
+                isCorrect: correctnessArray,
+                roadmap: roadmapId,
+                chapter: chapterNumber,
+                userAnswer: matches,
+            }),
+        });
+        if (res.ok) {
+            setIsCorrect(correctnessArray);
+            setScore(correctnessArray.filter(Boolean).length);
+            setSubmitted(true);
+        } else {
+            toast.error("Failed to submit task, Try again.");
+        }
     };
 
     const getLeftItemColor = (index) => {
@@ -278,10 +293,16 @@ export default function Match({ task }) {
                 )}
             </CardContent>
             <CardFooter className="flex justify-center gap-2">
-                {submitted ? (
-                    <Button variant={"secondary"} onClick={handleReset}>Try Again</Button>
-                ) : (
-                    <Button variant={"secondary"} onClick={handleSubmit} className={"bg-blue-500 text-zinc-50 dark:bg-blue-700/50 hover:bg-blue-600 dark:hover:bg-blue-600"}>Submit</Button>
+                {!submitted && (
+                    <Button
+                        variant={"secondary"}
+                        onClick={handleSubmit}
+                        className={
+                            "bg-blue-500 text-zinc-50 dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
+                        }
+                    >
+                        Submit
+                    </Button>
                 )}
             </CardFooter>
         </Card>
