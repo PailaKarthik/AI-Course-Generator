@@ -235,7 +235,7 @@ export default function Match({ task, roadmapId, chapterNumber }) {
                         })}
                     </svg>
 
-                    <div className="flex gap-6 justify-center md:gap-16">
+                    <div className="flex gap-6 justify-center select-none md:gap-16">
                         <div className="space-y-4">
                             {task.terms.lhs.map((term, index) => (
                                 <div

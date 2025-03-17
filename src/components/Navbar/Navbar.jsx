@@ -62,7 +62,7 @@ const Navbar = () => {
             <button onClick={signOutUser}>Logout</button>
           </div>
         )}
-        <button onClick={() => setSidebar(true)}>
+        <button className="cursor-pointer" onClick={() => setSidebar(true)}>
           <CgDetailsMore />
         </button>
         <div className="flex items-center gap-1">
