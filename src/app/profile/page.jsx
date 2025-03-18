@@ -14,6 +14,8 @@ import { Progress } from "@/components/ui/progress";
 import { ProblemSolvedChart } from "@/components/ui/problem-sloved-chart";
 import { RecentCourses } from "@/components/ui/recent-submissions";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const sampleData = {
   name: "John Doe",
@@ -108,28 +110,30 @@ const sampleData = {
 
 export default function Page() {
   const [data, setData] = useState(sampleData);
+  const {data : session} =  useSession();
+  const user = session?.user || ""
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen max-w-6xl pt-4 mx-auto flex-col">
       <main className="flex-1">
         <div className="container py-6">
-          <div className="grid gap-6 md:grid-cols-[1fr_3fr]">
+          <div className="grid gap-6 relative md:grid-cols-[1fr_3fr]">
             {/* Left Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-6 h-[calc(100vh-120px)] pt-3 sticky top-16">
               {/* User Profile Card */}
-              <Card>
+              <Card className={"gap-3"}>
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-4">
-                    <img
-                      src={data.image}
-                      width={80}
-                      height={80}
+                    {user && <img
+                      src={session?.user ? user.image : null}
+                      width={64}
+                      height={64}
                       alt="Avatar"
                       className="rounded-full border"
-                    />
+                    />}
                     <div>
-                      <CardTitle>{data.name}</CardTitle>
-                      <CardDescription>{data.email}</CardDescription>
+                      <CardTitle>{user.name}</CardTitle>
+                      <CardDescription>{user.email}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
@@ -150,8 +154,7 @@ export default function Page() {
                 </CardFooter>
               </Card>
 
-           
-              <Card>
+              <Card> 
                 <CardHeader>
                   <CardTitle className="text-base">Roadmap Level</CardTitle>
                 </CardHeader>
@@ -228,7 +231,7 @@ export default function Page() {
             </div>
 
             {/* Main Content */}
-            <div className="space-y-6 h-screen overflow-y-auto">
+            <div className="space-y-6 pt-3">
               <Card>
                 <CardHeader>
                   <CardTitle>Problems Solved</CardTitle>
