@@ -5,6 +5,8 @@ export default async function SignIn() {
     const session = await auth();
     let logedin=()=>{
         if (session) {
+            
+            
             redirect("/");
         }
         
