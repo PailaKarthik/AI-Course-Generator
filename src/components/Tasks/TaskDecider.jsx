@@ -1,16 +1,16 @@
 import FillUps from "./FillUps";
 import Quiz from "./Quiz";
-import Code from "./Code";
+import Match from "./Match";
 
-const TaskDecider = ({ task }) => {
+const TaskDecider = ({ task, roadmapId, chapterNumber }) => {
     return (
-        <div className="mx-auto w-max">
+        <div>
             {task.type === "fill-in-the-blank" ? (
-                <FillUps task={task} />
+                <FillUps task={task} roadmapId={roadmapId} chapterNumber={chapterNumber} />
             ) : task.type === "multiple-choice" ? (
-                <Quiz task={task} />
-            ) : task.type === "code " ? (
-                <Code task={task} />
+                <Quiz task={task} roadmapId={roadmapId} chapterNumber={chapterNumber} />
+            ) : task.type === "match-the-following" ? (
+                <Match task={task} roadmapId={roadmapId} chapterNumber={chapterNumber} />
             ) : (
                 ""
             )}

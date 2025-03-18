@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 function Roadmap({ roadMap, id }) {
     const [height, setHeight] = useState(
@@ -33,14 +32,14 @@ function Roadmap({ roadMap, id }) {
             </div>
             <div className="relative flex flex-col">
                 <div
-                    className="absolute w-1 top-1 left-2.5 bg-zinc-200 dark:bg-zinc-900"
+                    className="absolute w-1 top-1 left-7.5 bg-zinc-200 dark:bg-zinc-900"
                     style={{ height: `${height}px` }}
                 ></div>
 
                 {roadMap.chapters?.map((chapter, index) => (
                     <div
                         key={index}
-                        className="relative flex gap-4 h-32 max-sm:h-44 last:mb-0 sm:mb-2"
+                        className="relative flex ml-5 gap-4 h-32 max-sm:h-44 last:mb-0 sm:mb-2"
                     >
                         <div className="w-6 h-6 shrink-0 rounded-full border bg-zinc-200 dark:bg-zinc-900 border-gray-300 dark:border-zinc-800 flex justify-center items-center"></div>
 

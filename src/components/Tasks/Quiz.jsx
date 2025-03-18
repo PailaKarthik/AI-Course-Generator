@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -11,37 +11,55 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle, XCircle, ChevronRight, RotateCcw } from "lucide-react";
+import { CheckCircle, XCircle, Loader } from "lucide-react";
+import { toast } from "sonner";
 
-export default function Quiz({ task }) {
+export default function Quiz({ task, roadmapId, chapterNumber }) {
     const [selectedOption, setSelectedOption] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
-    const [score, setScore] = useState(0);
-
+    const [submitting, setSubmitting] = useState(false);
     const handleOptionSelect = (value) => {
         if (isAnswered) return;
         setSelectedOption(value);
     };
 
-    const checkAnswer = () => {
-        const correct = selectedOption === task.answer;
-        setIsCorrect(correct);
-        setIsAnswered(true);
-        if (correct) {
-            setScore((prev) => prev + 1);
+    const checkAnswer = async () => {
+        setSubmitting(true)
+        const isCorrect = selectedOption === task.answer;
+        const res = await fetch(`/api/tasks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                task,
+                isCorrect,
+                roadmap: roadmapId,
+                chapter: chapterNumber,
+                userAnswer: selectedOption,
+            }),
+        });
+        if (res.ok) {
+            setIsCorrect(isCorrect);
+            setIsAnswered(true);
+        } else {
+            toast.error("Failed to submit task, Try again.");
         }
+        setSubmitting(false)
     };
 
-    const resetQuiz = () => {
-        setSelectedOption("");
-        setIsAnswered(false);
-        setIsCorrect(false);
-    };
+    useEffect(() => {
+        if (task.isAnswered) {
+            setSelectedOption(task.userAnswer);
+            setIsAnswered(task.isAnswered);
+            setIsCorrect(task.isCorrect);
+        }
+    }, []);
 
     return (
-        <div className="max-w-3xl mx-auto p-4">
-            <Card className="w-[85vw] p-0 border-0 shadow-none lg:w-[40vw]">
+        <div>
+            <Card className="p-0 border-0 mx-auto shadow-none lg:w-[40vw]">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">
@@ -113,18 +131,39 @@ export default function Quiz({ task }) {
                     </div>
 
                     {isAnswered && (
-                        <div className="mt-6 space-y-4 animate-fadeIn">
-                            <div
-                                className={`p-4 rounded-lg border-l-4 ${
-                                    isCorrect
-                                        ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
-                                        : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
-                                }`}
-                            >
-                                <div className="font-bold text-lg mb-1">
-                                    {isCorrect ? "Correct!" : "Incorrect!"}
+                        <div>
+                            <div className="flex items-center mt-4">
+                                <div className="flex-shrink-0 mr-3">
+                                    {isCorrect ? (
+                                        <CheckCircle className="h-6 w-6 text-green-500" />
+                                    ) : (
+                                        <XCircle className="h-6 w-6 text-red-500" />
+                                    )}
                                 </div>
-                                <p>{task.explanation}</p>
+                                <div>
+                                    <div className="font-semibold">
+                                        {isCorrect ? "Correct!" : "Incorrect!"}
+                                    </div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        {isCorrect
+                                            ? "Great job!"
+                                            : `The correct answer is: ${task.answer}`}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-6 space-y-4 animate-fadeIn">
+                                <div
+                                    className={`p-4 rounded-lg border-l-4 ${
+                                        isCorrect
+                                            ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
+                                            : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
+                                    }`}
+                                >
+                                    <div className="font-bold text-lg mb-1">
+                                        Explanation
+                                    </div>
+                                    <p>{task.explanation}</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -132,10 +171,21 @@ export default function Quiz({ task }) {
                 <CardFooter>
                     {!isAnswered && (
                         <Button
-                            className={"w-full"}
+                            disabled={!selectedOption || submitting}
+                            variant={"secondary"}
+                            className={
+                                "bg-blue-500 text-zinc-50 mx-auto dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
+                            }
                             onClick={checkAnswer}
                         >
-                            Check Answer
+                            {submitting ? (
+                                <>
+                                    Submit
+                                    <Loader className="animate-spin"></Loader>{" "}
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     )}
                 </CardFooter>

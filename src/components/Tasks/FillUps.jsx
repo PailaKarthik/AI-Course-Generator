@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,22 +10,13 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, XCircle, ChevronRight, RotateCcw } from "lucide-react";
+import { CheckCircle, XCircle, Loader } from "lucide-react";
+import { toast } from "sonner";
 
-const task = {
-    type: "fill-in-the-blanks",
-    question:
-        "Complete the following trigonometric identity: sin²(x) + cos²(x) = _______",
-    answer: "1",
-    caseSensitive: false,
-    acceptableAnswers: ["1", "one", "1.0"],
-    explanation:
-        "The fundamental Pythagorean identity states that sin²(x) + cos²(x) = 1 for all values of x. dffdfdf",
-};
-
-const FillUps = ({ task }) => {
+const FillUps = ({ task, roadmapId, chapterNumber }) => {
     const [userAnswer, setUserAnswer] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
 
     const handleInputChange = (e) => {
@@ -33,8 +24,9 @@ const FillUps = ({ task }) => {
         setUserAnswer(e.target.value);
     };
 
-    const checkAnswer = () => {
-        let correct = false;
+    const checkAnswer = async () => {
+        let isCorrect = false;
+        setSubmitting(true);
         const normalizedUserAnswer = task.caseSensitive
             ? userAnswer.trim()
             : userAnswer.trim().toLowerCase();
@@ -44,15 +36,41 @@ const FillUps = ({ task }) => {
                 task.caseSensitive ? answer.trim() : answer.trim().toLowerCase()
         );
 
-        correct = normalizedAcceptableAnswers.includes(normalizedUserAnswer);
+        isCorrect = normalizedAcceptableAnswers.includes(normalizedUserAnswer);
 
-        setIsCorrect(correct);
-        setIsAnswered(true);
+        const res = await fetch(`/api/tasks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                task,
+                isCorrect,
+                roadmap: roadmapId,
+                chapter: chapterNumber,
+                userAnswer,
+            }),
+        });
+        if (res.ok) {
+            setIsCorrect(isCorrect);
+            setIsAnswered(true);
+        } else {
+            toast.error("Failed to submit task, Try again.");
+        }
+        setSubmitting(false);
     };
 
+    useEffect(() => {
+        if (task.isAnswered) {
+            setIsAnswered(task.isAnswered);
+            setIsCorrect(task.isCorrect);
+            setUserAnswer(task.userAnswer || "");
+        }
+    }, []);
+
     return (
-        <div className="w-full mx-auto p-4">
-            <Card className="shadow-lg w-[92vw] max-w-3xl border-2 gap-4">
+        <div className="w-full p-4">
+            <Card className="max-w-3xl gap-4 mx-auto border-0 shadow-none">
                 <CardHeader className="rounded-t-lg">
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-xl font-semibold">
@@ -65,7 +83,7 @@ const FillUps = ({ task }) => {
                     <div>
                         <h2 className="mb-0 text-lg font-semibold">Question</h2>
 
-                        <div className="flex flex-col gap-3 text-lg">
+                        <div className="flex select-none flex-col gap-3 text-lg">
                             <span>{task.question}</span>
                             <div className="flex items-center gap-2">
                                 Enter your answer :
@@ -94,40 +112,41 @@ const FillUps = ({ task }) => {
                         </div>
 
                         {isAnswered && (
-                            <div className="flex items-center mt-4">
-                                <div className="flex-shrink-0 mr-3">
-                                    {isCorrect ? (
-                                        <CheckCircle className="h-6 w-6 text-green-500" />
-                                    ) : (
-                                        <XCircle className="h-6 w-6 text-red-500" />
-                                    )}
+                            <div>
+                                <div className="flex items-center mt-4">
+                                    <div className="flex-shrink-0 mr-3">
+                                        {isCorrect ? (
+                                            <CheckCircle className="h-6 w-6 text-green-500" />
+                                        ) : (
+                                            <XCircle className="h-6 w-6 text-red-500" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold">
+                                            {isCorrect
+                                                ? "Correct!"
+                                                : "Incorrect!"}
+                                        </div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                                            {isCorrect
+                                                ? "Great job!"
+                                                : `The correct answer is: ${task.answer}`}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div className="font-semibold">
-                                        {isCorrect ? "Correct!" : "Incorrect!"}
+                                <div className="mt-6 space-y-4 animate-fadeIn">
+                                    <div
+                                        className={`p-4 rounded-lg border-l-4 ${
+                                            isCorrect
+                                                ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
+                                                : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
+                                        }`}
+                                    >
+                                        <div className="font-bold text-lg mb-1">
+                                            Explanation
+                                        </div>
+                                        <p>{task.explanation}</p>
                                     </div>
-                                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                                        {isCorrect
-                                            ? "Great job!"
-                                            : `The correct answer is: ${task.answer}`}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {isAnswered && (
-                            <div className="mt-6 space-y-4 animate-fadeIn">
-                                <div
-                                    className={`p-4 rounded-lg border-l-4 ${
-                                        isCorrect
-                                            ? "bg-green-50 dark:bg-green-950/30 border-green-500 text-green-700 dark:text-green-400"
-                                            : "bg-red-50 dark:bg-red-950/30 border-red-500 text-red-700 dark:text-red-400"
-                                    }`}
-                                >
-                                    <div className="font-bold text-lg mb-1">
-                                        Explanation
-                                    </div>
-                                    <p>{task.explanation}</p>
                                 </div>
                             </div>
                         )}
@@ -136,10 +155,21 @@ const FillUps = ({ task }) => {
                 <CardFooter>
                     {!isAnswered && (
                         <Button
-                            className={"w-full"}
+                            variant={"secondary"}
+                            className={
+                                "bg-blue-500 text-zinc-50 mx-auto dark:bg-blue-800 hover:bg-blue-600 dark:hover:bg-blue-600"
+                            }
                             onClick={checkAnswer}
+                            disabled={!userAnswer || submitting}
                         >
-                            Check Answer
+                            {submitting ? (
+                                <>
+                                    Submitting
+                                    <Loader className="animate-spin"></Loader>
+                                </>
+                            ) : (
+                                "Submit"
+                            )}
                         </Button>
                     )}
                 </CardFooter>

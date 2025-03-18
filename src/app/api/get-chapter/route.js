@@ -14,6 +14,7 @@ export async function POST(req) {
         }
 
         const { roadmapId, chapter, content } = await req.json();
+        const { tasks, ...chapterNew } = content;
         const docRef = doc(
             db,
             "users",
@@ -24,7 +25,19 @@ export async function POST(req) {
             chapter
         );
 
-        await setDoc(docRef, { content });
+        await setDoc(docRef, { content: chapterNew });
+        const taskDocRef = doc(
+            db,
+            "users",
+            session.user.email,
+            "roadmaps",
+            roadmapId,
+            "chapters",
+            chapter,
+            "tasks",
+            "task"
+        );
+        await setDoc(taskDocRef, { ...tasks });
 
         return NextResponse.json({ message: "Chapter added successfully" });
     } catch (error) {
