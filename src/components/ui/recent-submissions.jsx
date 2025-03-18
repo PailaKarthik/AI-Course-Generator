@@ -4,7 +4,6 @@ import Link from "next/link";
 
 
 export function RecentCourses({courses}) {
-  console.log(courses);
   
   return (
     <div className="space-y-4">

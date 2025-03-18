@@ -133,7 +133,7 @@ export default function Page() {
                     />}
                     <div>
                       <CardTitle>{user.name}</CardTitle>
-                      <CardDescription>{user.email}</CardDescription>
+                      <CardDescription className={"text-[10px] m-1.5 ml-0"}>{user.email}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
