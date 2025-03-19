@@ -8,6 +8,7 @@ import { CgDetailsMore } from "react-icons/cg";
 import { authenti, signOuting } from "./new";
 import { Sun, Moon } from "lucide-react";
 import Image from "next/image";
+import GoogleTranslate from "../GoogleTranslate";
 
 const Navbar = () => {
   const [session, setSession] = useState(null);
@@ -48,7 +49,7 @@ const Navbar = () => {
     <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
       <div className="flex w-full justify-between px-3 lg:px-10 items-center">
         {sidebar && (
-          <div className="w-[360px] h-screen bg-black text-white fixed top-0 left-0 flex flex-col gap-4 p-4">
+          <div className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4">
             <button
               className="items-center"
               onClick={() => setSidebar(false)}
@@ -58,9 +59,10 @@ const Navbar = () => {
             <Link href="/">Home</Link>
             <Link href="/about">About</Link>
             <Link href="/profile">Profile</Link>
-
             <Link href="/contact">Contact</Link>
             <Link href="/profile">Profile</Link>
+            <div className="flex">Translate : <GoogleTranslate/></div>
+            
             <button onClick={signOutUser}>Logout</button>
           </div>
         )}
