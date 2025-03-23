@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { auth } from "@/app/auth";
+import { db } from "@/lib/firebase";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 export const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -25,26 +28,42 @@ function parseJson(response) {
 // Post request to generate the roadmap
 export async function POST(req, res) {
     let user_prompt = await req.json();
-    const response = await openai.chat.completions.create({
-        model: "gemini-2.0-flash",
-        messages: [
-            {
-                role: "system",
-                content:
-                    "Act as a structured roadmap generator. Create a chapter-wise learning path for [CONCEPT] with these requirements: Format: Strictly return valid JSON (no markdown) with camelCase keys. The json must contain the CourseTitle CourseDescription and Each chapter must contain: chapterNumber (integer), chapterTitle (concise), chapterDescription (1 sentence), learningObjectives, contentOutline . Style: Learning objectives start with action verbs (Analyze, Implement, Compare). Avoid vague terms - focus on measurable outcomes. Prioritize logical progression from foundational to advanced topics.",
-            },
-            {
-                role: "user",
-                content: user_prompt.prompt,
-            },
-        ],
-    });
-    const parsedResponse = parseJson(response.choices[0].message.content);
-    if (parsedResponse.error) {
-        return NextResponse.json(
-            { message: "Please enter a valid concept" },
-            { status: 404 }
-        );
+    const session = await auth();
+    if (!session) {
+        return NextResponse.json({ message: "unauthorized" }, { status: 401 });
     }
-    return NextResponse.json({ text: parsedResponse });
+    try {
+        const response = await openai.chat.completions.create({
+            model: "gemini-2.0-flash",
+            messages: [
+                {
+                    role: "system",
+                    content:
+                        "Act as a structured roadmap generator. Create a chapter-wise learning path for [CONCEPT] with these requirements: Format: Strictly return valid JSON (no markdown) with camelCase keys. The json must contain the CourseTitle CourseDescription and Each chapter must contain: chapterNumber (integer), chapterTitle (concise), chapterDescription (1 sentence), learningObjectives, contentOutline . Style: Learning objectives start with action verbs (Analyze, Implement, Compare). Avoid vague terms - focus on measurable outcomes. Prioritize logical progression from foundational to advanced topics.",
+                },
+                {
+                    role: "user",
+                    content: user_prompt.prompt,
+                },
+            ],
+        });
+        const parsedResponse = parseJson(response.choices[0].message.content);
+        if (parsedResponse.error) {
+            return NextResponse.json(
+                { message: "Please enter a valid concept" },
+                { status: 404 }
+            );
+        }
+        const docRef = doc(db, "users", session.user.email);
+        const difficulty =
+            user_prompt.difficulty === "in-depth"
+                ? "inDepth"
+                : user_prompt.difficulty;
+        await updateDoc(docRef, {
+            [`roadmapLevel.${difficulty}`]: increment(1),
+        });
+        return NextResponse.json({ text: parsedResponse });
+    } catch (error) {
+        return NextResponse.json({ message: error }, { status: 500 });
+    }
 }

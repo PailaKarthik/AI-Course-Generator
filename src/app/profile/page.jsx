@@ -1,7 +1,5 @@
 "use client";
 
-import { CalendarDays, CheckCircle, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { ProblemSolvedChart } from "@/components/ui/problem-sloved-chart";
 import { RecentCourses } from "@/components/ui/recent-submissions";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Sidebar from "@/components/dashboard/Sidebar";
 
 const sampleData = {
   name: "John Doe",
@@ -119,116 +117,7 @@ export default function Page() {
         <div className="container py-6">
           <div className="grid gap-6 relative md:grid-cols-[1fr_3fr]">
             {/* Left Sidebar */}
-            <div className="space-y-6 h-[calc(100vh-120px)] pt-3 sticky top-16">
-              {/* User Profile Card */}
-              <Card className={"gap-3"}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-4">
-                    {user && <img
-                      src={session?.user ? user.image : null}
-                      width={64}
-                      height={64}
-                      alt="Avatar"
-                      className="rounded-full border"
-                    />}
-                    <div>
-                      <CardTitle>{user.name}</CardTitle>
-                      <CardDescription className={"text-[10px] m-1.5 ml-0"}>{user.email}</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Trophy className="h-4 w-4" />
-                    <span>Rank: {data.rank}</span>
-                  </div>
-                  <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                    <CalendarDays className="h-4 w-4" />
-                    <span>Joined: {data.joined}</span>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-2">
-                  <Button className="w-full" size="sm">
-                    Edit Profile
-                  </Button>
-                </CardFooter>
-              </Card>
-
-              <Card> 
-                <CardHeader>
-                  <CardTitle className="text-base">Roadmap Level</CardTitle>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="mb-1 flex items-center justify-between text-sm">
-                        <span>Easy</span>
-                        <span className="text-muted-foreground">
-                          {data.number_of_easy}
-                        </span>
-                      </div>
-                      <Progress
-                        value={data.number_of_easy * 10}
-                        className="h-2 bg-muted"
-                      />
-                    </div>
-                    <div>
-                      <div className="mb-1 flex items-center justify-between text-sm">
-                        <span>Medium</span>
-                        <span className="text-muted-foreground">
-                          {data.number_of_medium}
-                        </span>
-                      </div>
-                      <Progress
-                        value={data.number_of_medium * 10}
-                        className="h-2 bg-muted"
-                      />
-                    </div>
-                    <div>
-                      <div className="mb-1 flex items-center justify-between text-sm">
-                        <span>Hard</span>
-                        <span className="text-muted-foreground">
-                          {data.number_of_hard}
-                        </span>
-                      </div>
-                      <Progress
-                        value={data.number_of_hard * 10}
-                        className="h-2 bg-muted"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-2">
-                  <div className="grid w-full grid-cols-3 gap-2 text-center text-sm">
-                    <div>
-                      <div className="font-medium">
-                        {data.total_number_of_question_solved}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Solved</div>
-                    </div>
-                    <div>
-                      <div className="font-medium">
-                        {data.total_number_of_question_attempted}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Total</div>
-                    </div>
-                    <div>
-                      <div className="font-medium">
-                        {Math.round(
-                          (data.total_number_of_question_solved /
-                            data.total_number_of_question_attempted) *
-                            100
-                        )}
-                        %
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Completion
-                      </div>
-                    </div>
-                  </div>
-                </CardFooter>
-              </Card>
-            </div>
+            <Sidebar data={data} />
 
             {/* Main Content */}
             <div className="space-y-6 pt-3">

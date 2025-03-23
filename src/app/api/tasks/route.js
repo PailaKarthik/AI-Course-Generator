@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, increment, updateDoc } from "firebase/firestore";
 import { auth } from "@/app/auth";
 
 export async function POST(req) {
@@ -16,7 +16,13 @@ export async function POST(req) {
         const { task, roadmap, chapter, isCorrect, userAnswer } =
             await req.json();
 
-        if (!task || !roadmap || !chapter || typeof isCorrect  === "undefined" || !userAnswer) {
+        if (
+            !task ||
+            !roadmap ||
+            !chapter ||
+            typeof isCorrect === "undefined" ||
+            !userAnswer
+        ) {
             return NextResponse.json(
                 {
                     message:
@@ -54,6 +60,11 @@ export async function POST(req) {
                 isCorrect: isCorrect,
                 userAnswer,
             };
+            if (isCorrect) {
+                await updateDoc(doc(db, "users", session.user.email), {
+                    xp: increment(1),
+                });
+            }
         } else {
             return NextResponse.json(
                 { message: "Task not found" },

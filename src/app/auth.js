@@ -16,8 +16,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         name: user.name,
                         email: user.email,
                         image: user.image,
-                        points : 0,
-
+                        points: 0,
+                        roadmapLevel: {
+                            fast: 0,
+                            inDepth: 0,
+                            balanced: 0,
+                        },
                         createdAt: Date.now(),
                     });
                 }

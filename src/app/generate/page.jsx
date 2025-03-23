@@ -128,7 +128,7 @@ export default function Page() {
         let res = await fetch("/api/user_prompt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt }),
+            body: JSON.stringify({ prompt, difficulty : data.difficultyLevel }),
         });
 
         let responseData = await res.json();
@@ -136,6 +136,12 @@ export default function Page() {
         if (res.status === 404) {
             toast.error(
                 "The provided concept is unsuitable for forming a course."
+            );
+            setIsSubmitting(false);
+            return;
+        } else if(res.status === 500){
+            toast.error(
+                "There was an error while generating your roadmap."
             );
             setIsSubmitting(false);
             return;

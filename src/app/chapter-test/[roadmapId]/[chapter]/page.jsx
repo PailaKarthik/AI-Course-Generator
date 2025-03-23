@@ -7,10 +7,7 @@ const ChapterPage = () => {
 
     return (
         <>
-            <Page
-                roadmapId={params.roadmapId}
-                chapter={params.chapter}
-            />
+            <Page roadmapId={params.roadmapId} chapter={params.chapter} />
         </>
     );
 };
