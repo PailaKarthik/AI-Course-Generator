@@ -19,11 +19,15 @@ export async function GET() {
 
         const querySnapshot = await getDocs(q);
 
-        const docs = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            courseTitle: doc.data().courseTitle,
-            courseDescription: doc.data().courseDescription,
-        }));
+        const docs = querySnapshot.docs
+            .map((doc) => ({
+                id: doc.id,
+                courseTitle: doc.data().courseTitle,
+                courseDescription: doc.data().courseDescription,
+                completed : doc.data().completed ? true : false,
+                createdAt: doc.data().createdAt,
+            }))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         return NextResponse.json({ docs });
     } catch (error) {

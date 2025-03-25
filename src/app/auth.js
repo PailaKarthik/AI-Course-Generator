@@ -10,7 +10,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             try {
                 const userRef = doc(db, "users", user.email);
                 const userSnap = await getDoc(userRef);
-
                 if (!userSnap.exists()) {
                     await setDoc(userRef, {
                         name: user.name,
@@ -22,6 +21,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                             inDepth: 0,
                             balanced: 0,
                         },
+                        xptrack: Object.fromEntries(
+                            Array(12)
+                                .fill(0)
+                                .map((value, index) => [index, value])
+                        ),
                         createdAt: Date.now(),
                     });
                 }

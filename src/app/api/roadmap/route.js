@@ -8,9 +8,8 @@ export async function POST(req) {
     const { roadmap } = await req.json();
     const session = await auth();
     const docRef = await addDoc(
-        collection(db, "users", session.user.email, "roadmaps"), {...roadmap.text}
+        collection(db, "users", session.user.email, "roadmaps"), {...roadmap.text, createdAt : Date.now()}
     );
-    console.log("success", docRef.id);
     return NextResponse.json({text : docRef.id})
 }
 

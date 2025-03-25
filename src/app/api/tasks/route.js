@@ -3,6 +3,26 @@ import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, increment, updateDoc } from "firebase/firestore";
 import { auth } from "@/app/auth";
 
+async function completeChapter(chapter, roadmapId, user) {
+    const docRef = doc(db, "users", user.email, "roadmaps", roadmapId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const roadmap = docSnap.data();
+        const updatedChapters = roadmap.chapters.map((ch) =>
+            ch.chapterNumber == chapter ? { ...ch, completed: true } : ch
+        );
+        const completedChapters = updatedChapters.filter((ch) => ch.completed);
+        if(completedChapters.length === updatedChapters.length){
+            await updateDoc(docRef, {
+                completed : true
+            })
+        }
+        await updateDoc(docRef, {
+            chapters: updatedChapters,
+        });
+    }
+}
+
 export async function POST(req) {
     try {
         const session = await auth();
@@ -60,10 +80,21 @@ export async function POST(req) {
                 isCorrect: isCorrect,
                 userAnswer,
             };
+
+            const date = new Date();
+            const month = date.getMonth();
+
             if (isCorrect) {
                 await updateDoc(doc(db, "users", session.user.email), {
-                    xp: increment(1),
+                    xp: increment(10),
+                    [`xptrack.${month}`]: increment(10),
                 });
+            }
+
+            const completedTasks = allTasks.filter((task) => task.isAnswered);
+
+            if (completedTasks.length === allTasks.length) {
+                completeChapter(chapter, roadmap, session.user);
             }
         } else {
             return NextResponse.json(

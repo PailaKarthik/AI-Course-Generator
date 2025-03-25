@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <Card className="p-2 text-xs shadow-lg">
         <p className="font-medium">{label}</p>
-        <p className="font-medium mt-1 border-t pt-1">Total Questions: {totalQuestions}</p>
+        <p className="font-medium mt-1 border-t pt-1">Total XP : {totalQuestions}</p>
       </Card>
     );
   }
@@ -65,9 +65,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export function ProblemSolvedChart({ questions }) {
   const [data, setData] = useState([]);
-
+  
+  
   useEffect(() => {
     setData(processQuestionsData(questions));
+    
   }, [questions]);
 
   return (
@@ -85,7 +87,7 @@ export function ProblemSolvedChart({ questions }) {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="totalQuestions" fill="#4ade80" name="Total Questions" />
+          <Bar dataKey="totalQuestions" fill="#0865e9" name="Total XP" />
         </BarChart>
       </ResponsiveContainer>
     </div>

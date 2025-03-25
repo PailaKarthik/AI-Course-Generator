@@ -12,23 +12,14 @@ import { CalendarDays, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
-const Sidebar = ({ data }) => {
-    const [user, setUser] = useState(null);
-    const { data: session } = useSession();
-
-    useEffect(() => {
-        setUser(session?.user);
-    }, [session]);
-
+const Sidebar = ({ user }) => {
     return (
-        <div className="space-y-6 h-[calc(100vh-120px)] pt-3 sticky top-16">
+        <div className="space-y-6 md:h-[calc(100vh-120px)] pt-3 md:sticky top-16">
             <Card className="gap-3">
                 <CardHeader className="pb-2">
-                    <div className="flex items-center gap-4">
-                        {user ? (
+                    <div className="flex items-center flex-wrap gap-4">
+                        {user.image ? (
                             <img
                                 src={user.image || "/default-avatar.png"}
                                 width={64}
@@ -39,10 +30,10 @@ const Sidebar = ({ data }) => {
                         ) : (
                             <Skeleton className="w-16 h-16 rounded-full" />
                         )}
-                        {user ? (
-                            <div>
+                        {user.name ? (
+                            <div className="w-36">
                                 <CardTitle>{user.name}</CardTitle>
-                                <CardDescription className="text-[14px] mt-1">
+                                <CardDescription className="text-[14px] w-full mt-1">
                                     {user.email}
                                 </CardDescription>
                             </div>
@@ -57,11 +48,19 @@ const Sidebar = ({ data }) => {
                 <CardContent className="pb-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Trophy className="h-4 w-4" />
-                        <span>Rank: {data?.rank || "N/A"}</span>
+                        <span>Rank: { "N/A"}</span>
                     </div>
                     <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                         <CalendarDays className="h-4 w-4" />
-                        <span>Joined: {data?.joined || "N/A"}</span>
+                        <span>
+                            Joined:{" "}
+                            {user?.createdAt
+                                ? new Date(user.createdAt).toLocaleDateString(
+                                      "en-US",
+                                      { month: "long", year: "numeric" }
+                                  )
+                                : "N/A"}
+                        </span>
                     </div>
                 </CardContent>
                 <CardFooter className="pt-2">
