@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, rank }) => {
     return (
         <div className="space-y-6 md:h-[calc(100vh-120px)] pt-3 md:sticky top-16">
             <Card className="gap-3">
@@ -48,18 +48,18 @@ const Sidebar = ({ user }) => {
                 <CardContent className="pb-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Trophy className="h-4 w-4" />
-                        <span>Rank: { "N/A"}</span>
+                        <span className="flex items-end gap-2">Rank: { rank ? rank : <Skeleton className={"w-6 h-3.5"}></Skeleton>}</span>
                     </div>
                     <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                         <CalendarDays className="h-4 w-4" />
-                        <span>
+                        <span className="flex items-end gap-2"> 
                             Joined:{" "}
                             {user?.createdAt
                                 ? new Date(user.createdAt).toLocaleDateString(
                                       "en-US",
                                       { month: "long", year: "numeric" }
                                   )
-                                : "N/A"}
+                                : <Skeleton className={"w-12 h-3.5"}></Skeleton>}
                         </span>
                     </div>
                 </CardContent>
