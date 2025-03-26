@@ -37,8 +37,10 @@ const Navbar = () => {
     // Fetch session
     useEffect(() => {
         const fetchSession = async () => {
-            let session = authenti();
+            let session = await authenti();
             setSession(session);
+            console.log(session);
+            
         };
         fetchSession();
     }, []);
@@ -157,7 +159,7 @@ const Navbar = () => {
                     >
                         {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
                     </Button>
-                    {session?.user ? (
+                    {session ? (
                         <Link href={"/profile"}>
                             <Button variant={"ghost"}>
                                 <User className="w-5" />
