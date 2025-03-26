@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 import LoaderProvider from "@/components/ui/Custom/ToastLoader";
 import { SessionProvider } from "next-auth/react";
+import { XpProvider } from "@/contexts/xp";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -23,17 +24,19 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <html lang="en">
-            <SessionProvider>
-                <body
-                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-                >
-                    <LoaderProvider>
-                        <Navbar></Navbar>
-                        <main className="pt-16 relative">{children}</main>
-                        <Toaster richColors />
-                    </LoaderProvider>
-                </body>
-            </SessionProvider>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+                <SessionProvider>
+                    <XpProvider> 
+                        <LoaderProvider>
+                            <Navbar />
+                            <main className="pt-16 relative">{children}</main>
+                            <Toaster richColors />
+                        </LoaderProvider>
+                    </XpProvider>
+                </SessionProvider>
+            </body>
         </html>
     );
 }

@@ -24,7 +24,7 @@ export async function GET() {
                 id: doc.id,
                 courseTitle: doc.data().courseTitle,
                 courseDescription: doc.data().courseDescription,
-                completed : doc.data().completed ? true : false,
+                completed : doc.data().completed,
                 createdAt: doc.data().createdAt,
             }))
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

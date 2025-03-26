@@ -122,8 +122,10 @@ export default function Page() {
         async function fetchRoadmaps() {
             const res = await fetch("/api/roadmap/all");
             const data = await res.json();
-            const docs = data.docs.length > 4 ? data.docs.slice(0,4) : data.docs
-            const completed = data.filter((roadmap)=> roadmap.completed)
+            let docs = data.docs.length > 4 ? data.docs.slice(0,4) : data.docs
+            docs = docs.filter((e)=> !e.completed)
+            const completed = data.docs.filter((roadmap)=> roadmap.completed) || []
+
             setcompletedRoadmaps(completed)
             setRecentRoamdaps(docs);
         }

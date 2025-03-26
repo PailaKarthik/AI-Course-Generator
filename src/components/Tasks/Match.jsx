@@ -12,6 +12,8 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { useContext } from "react";
+import xpContext from "@/contexts/xp";
 
 export default function Match({ task, roadmapId, chapterNumber }) {
     const [selectedLeft, setSelectedLeft] = useState(null);
@@ -24,6 +26,7 @@ export default function Match({ task, roadmapId, chapterNumber }) {
     const [isCorrect, setIsCorrect] = useState([]);
     const [score, setScore] = useState(0);
     const [lines, setLines] = useState([]);
+    const { getXp } = useContext(xpContext);
 
     const leftRefs = useRef([]);
     const rightRefs = useRef([]);
@@ -171,6 +174,7 @@ export default function Match({ task, roadmapId, chapterNumber }) {
         if (res.ok) {
             setIsCorrect(correctnessArray);
             setScore(correctnessArray.filter(Boolean).length);
+            getXp()
             setSubmitted(true);
         } else {
             toast.error("Failed to submit task, Try again.");

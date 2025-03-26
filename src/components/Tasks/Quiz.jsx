@@ -13,12 +13,15 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { toast } from "sonner";
+import { useContext } from "react";
+import xpContext from "@/contexts/xp";
 
 export default function Quiz({ task, roadmapId, chapterNumber }) {
     const [selectedOption, setSelectedOption] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const {getXp} = useContext(xpContext)
     const handleOptionSelect = (value) => {
         if (isAnswered) return;
         setSelectedOption(value);
@@ -42,6 +45,7 @@ export default function Quiz({ task, roadmapId, chapterNumber }) {
         });
         if (res.ok) {
             setIsCorrect(isCorrect);
+            getXp()
             setIsAnswered(true);
         } else {
             toast.error("Failed to submit task, Try again.");

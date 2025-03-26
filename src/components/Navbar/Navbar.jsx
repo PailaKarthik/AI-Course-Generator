@@ -9,11 +9,15 @@ import { authenti, signOuting } from "./new";
 import { Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import GoogleTranslate from "../GoogleTranslate";
+import { useContext } from "react";
+import xpContext from "@/contexts/xp";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
     const [session, setSession] = useState(null);
     const [sidebar, setSidebar] = useState(false);
     const [theme, setTheme] = useState("light"); // Default theme: light
+    const { xp, show, changed } = useContext(xpContext);
 
     // Load saved theme or use default
     useEffect(() => {
@@ -88,6 +92,33 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="flex items-center">
+                    <div className="mr-2 flex gap-3 relative">
+                        xp{" "}
+                        <span className="">
+                            {xp}
+                            {show && (
+                                <AnimatePresence>
+                                    <motion.div
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0.5,
+                                            y: 10,
+                                        }} 
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }} 
+                                        transition={{
+                                            duration: 0.3,
+                                            ease: "easeOut",
+                                        }}
+                                        className="absolute text-green-600 right-0 w-7"
+                                    >
+                                        <p>+{changed}</p>
+                                    </motion.div>
+                                </AnimatePresence>
+                            )}
+                        </span>
+                    </div>
+
                     <Button
                         onClick={toggleTheme}
                         variant={"ghost"}

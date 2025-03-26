@@ -12,12 +12,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { CheckCircle, XCircle, Loader } from "lucide-react";
 import { toast } from "sonner";
+import { useContext } from "react";
+import xpContext from "@/contexts/xp";
 
 const FillUps = ({ task, roadmapId, chapterNumber }) => {
     const [userAnswer, setUserAnswer] = useState("");
     const [isAnswered, setIsAnswered] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const {getXp} = useContext(xpContext)
 
     const handleInputChange = (e) => {
         if (isAnswered) return;
@@ -52,6 +55,7 @@ const FillUps = ({ task, roadmapId, chapterNumber }) => {
             }),
         });
         if (res.ok) {
+            getXp()
             setIsCorrect(isCorrect);
             setIsAnswered(true);
         } else {

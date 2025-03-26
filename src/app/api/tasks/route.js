@@ -12,10 +12,10 @@ async function completeChapter(chapter, roadmapId, user) {
             ch.chapterNumber == chapter ? { ...ch, completed: true } : ch
         );
         const completedChapters = updatedChapters.filter((ch) => ch.completed);
-        if(completedChapters.length === updatedChapters.length){
+        if (completedChapters.length === updatedChapters.length) {
             await updateDoc(docRef, {
-                completed : true
-            })
+                completed: true,
+            });
         }
         await updateDoc(docRef, {
             chapters: updatedChapters,
@@ -74,6 +74,11 @@ export async function POST(req) {
         );
 
         if (taskIndex !== -1) {
+            if (allTasks[taskIndex].isAnswered) {
+                return NextResponse.json({
+                    message: "Task is already answered",
+                });
+            }
             allTasks[taskIndex] = {
                 ...task,
                 isAnswered: true,
@@ -85,9 +90,14 @@ export async function POST(req) {
             const month = date.getMonth();
 
             if (isCorrect) {
+                let points = 10;
+                if (task.type === "match-the-following") {
+                    points = isCorrect.filter((e) => e).length * 5;
+                }
+
                 await updateDoc(doc(db, "users", session.user.email), {
-                    xp: increment(10),
-                    [`xptrack.${month}`]: increment(10),
+                    xp: increment(points),
+                    [`xptrack.${month}`]: increment(points),
                 });
             }
 
