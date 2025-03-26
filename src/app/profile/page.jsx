@@ -17,6 +17,8 @@ export default function Page() {
     const [recentRoadmaps, setRecentRoamdaps] = useState([]);
     const [completedRoadmaps, setcompletedRoadmaps] = useState([]);
     const [rank, setRank] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [difficultyLevel, setDifficultyLevel] = useState([])
 
     useEffect(() => {
         async function fetchUser() {
@@ -28,15 +30,18 @@ export default function Page() {
         }
 
         async function fetchRoadmaps() {
+            setLoading(true)
             const res = await fetch("/api/roadmap/all");
             const data = await res.json();
+            const diffLevel = data.difficultyArray
             let docs = data.docs.length > 4 ? data.docs.slice(0, 4) : data.docs;
             docs = docs.filter((e) => !e.completed);
             const completed =
                 data.docs.filter((roadmap) => roadmap.completed) || [];
-
             setcompletedRoadmaps(completed);
+            setDifficultyLevel(diffLevel)
             setRecentRoamdaps(docs);
+            setLoading(false)
         }
 
         async function fetchRank() {
@@ -55,10 +60,8 @@ export default function Page() {
             <main className="flex-1">
                 <div className="container py-6">
                     <div className="grid gap-6 mx-4 relative md:grid-cols-[1fr_3fr]">
-                        {/* Left Sidebar */}
-                        <Sidebar user={userData} rank={rank} />
+                        <Sidebar user={userData} rank={rank} difficultyLevel= {difficultyLevel} />
 
-                        {/* Main Content */}
                         <div className="space-y-6 pt-3">
                             <Card>
                                 <CardHeader>
@@ -80,7 +83,7 @@ export default function Page() {
                                     <CardTitle>Recent Courses</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <RecentCourses courses={recentRoadmaps} />
+                                    <RecentCourses courses={recentRoadmaps} loading={loading}/>
                                 </CardContent>
                             </Card>
                             <Card className={"border-0 shadow-none p-0"}>
@@ -90,6 +93,7 @@ export default function Page() {
                                 <CardContent>
                                     <RecentCourses
                                         courses={completedRoadmaps}
+                                        loading={loading}
                                     />
                                 </CardContent>
                             </Card>

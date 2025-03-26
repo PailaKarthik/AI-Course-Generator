@@ -24,12 +24,23 @@ export async function GET() {
                 id: doc.id,
                 courseTitle: doc.data().courseTitle,
                 courseDescription: doc.data().courseDescription,
-                completed : doc.data().completed,
+                completed: doc.data().completed,
                 createdAt: doc.data().createdAt,
+                difficulty: doc.data().difficulty,
             }))
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        return NextResponse.json({ docs });
+        
+        let difficultyArray =[0, 0 , 0]
+        docs.forEach((e)=>{
+            if(e.difficulty === "in-depth"){
+                difficultyArray[2] += 1 
+            }else if(e.difficulty === "fast"){
+                difficultyArray[0] += 1 
+            }else if( e.difficulty === "balanced"){
+                difficultyArray[1] += 1 
+            }
+        })
+        return NextResponse.json({ docs, difficultyArray });
     } catch (error) {
         return NextResponse.json({ message: error.message }, { status: 500 });
     }

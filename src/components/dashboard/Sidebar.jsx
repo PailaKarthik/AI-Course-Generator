@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Sidebar = ({ user, rank }) => {
+const Sidebar = ({ user, rank, difficultyLevel }) => {
     return (
         <div className="space-y-6 md:h-[calc(100vh-120px)] pt-3 md:sticky top-16">
             <Card className="gap-3">
@@ -76,19 +76,19 @@ const Sidebar = ({ user, rank }) => {
                 </CardHeader>
                 <CardContent className="pb-2">
                     <div className="space-y-4">
-                        {["fast", "balanced", "inDepth"].map((level) => (
+                        {["fast", "balanced", "inDepth"].map((level, index) => (
                             <div key={level}>
                                 <div className="mb-1 flex items-center justify-between text-sm">
                                     <span className="capitalize">
                                         {level.replace(/([A-Z])/g, " $1")}
                                     </span>
                                     <span className="text-muted-foreground">
-                                        {user?.roadmapLevel?.[level] ?? 0}
+                                        {difficultyLevel[index] ?? 0}
                                     </span>
                                 </div>
                                 <Progress
                                     value={
-                                        (user?.roadmapLevel?.[level] ?? 0) * 10
+                                        (difficultyLevel[index] ?? 0) * 10
                                     }
                                     className="h-2 bg-muted"
                                 />

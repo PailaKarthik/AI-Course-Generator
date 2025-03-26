@@ -128,7 +128,7 @@ export default function Page() {
         let res = await fetch("/api/user_prompt", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt, difficulty : data.difficultyLevel }),
+            body: JSON.stringify({ prompt, difficulty: data.difficultyLevel }),
         });
 
         let responseData = await res.json();
@@ -139,10 +139,8 @@ export default function Page() {
             );
             setIsSubmitting(false);
             return;
-        } else if(res.status === 500){
-            toast.error(
-                "There was an error while generating your roadmap."
-            );
+        } else if (res.status === 500) {
+            toast.error("There was an error while generating your roadmap.");
             setIsSubmitting(false);
             return;
         }
@@ -150,7 +148,10 @@ export default function Page() {
         let roadmapResponse = await fetch("/api/roadmap", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roadmap: responseData }),
+            body: JSON.stringify({
+                roadmap: responseData,
+                difficulty: data.difficultyLevel,
+            }),
         });
 
         if (roadmapResponse.ok) {
@@ -199,25 +200,27 @@ export default function Page() {
     ];
 
     useEffect(() => {
-        if(isSubmitting){
+        if (isSubmitting) {
             window.scrollTo({ top: 0, behavior: "smooth" });
-            document.documentElement.style.overflow = "hidden"
+            document.documentElement.style.overflow = "hidden";
         } else {
-            document.documentElement.style.overflow = "auto"
+            document.documentElement.style.overflow = "auto";
         }
 
         return () => {
             document.documentElement.style.overflow = "auto";
         };
-    }, [isSubmitting])
-    
+    }, [isSubmitting]);
 
     return (
         <div className="min-h-screen bg-background">
             {isSubmitting && (
                 <div className="w-full h-screen flex flex-col gap-2 items-center justify-center absolute z-5 opacity-95 bg-background backdrop-blur-3xl">
                     <Loader2 className="animate-spin -translate-y-16"></Loader2>
-                    <p className="-translate-y-16"> Please wait while we generate your roadmap</p>
+                    <p className="-translate-y-16">
+                        {" "}
+                        Please wait while we generate your roadmap
+                    </p>
                 </div>
             )}
             <div className="mx-auto max-w-3xl pt-4">
