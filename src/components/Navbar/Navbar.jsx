@@ -61,7 +61,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -360 }}
                         transition={{
-                            duration: 0.3,
+                            duration: 0.1,
                             ease: "easeOut",
                         }}
                         className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4"
@@ -153,11 +153,11 @@ const Navbar = () => {
                     <Button
                         onClick={toggleTheme}
                         variant={"ghost"}
-                        className={"border-0 "}
+                        className={"border-0 mx-2"}
                     >
                         {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
                     </Button>
-                    {session ? (
+                    {session?.user ? (
                         <Link href={"/profile"}>
                             <Button variant={"ghost"}>
                                 <User className="w-5" />
