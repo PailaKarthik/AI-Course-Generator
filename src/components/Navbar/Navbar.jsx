@@ -53,24 +53,55 @@ const Navbar = () => {
         <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
             <div className="flex w-full justify-between px-3 lg:px-10 items-center">
                 {sidebar && (
-                    <div className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4">
-                        <button
-                            className="items-center"
+                    <motion.div
+                        initial={{
+                            opacity: 0,
+                            x: -360,
+                        }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -360 }}
+                        transition={{
+                            duration: 0.3,
+                            ease: "easeOut",
+                        }}
+                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4"
+                    >
+                        <Button
+                            variant={"ghost"}
+                            className="items-center w-max"
                             onClick={() => setSidebar(false)}
                         >
                             <IoClose />
-                        </button>
-                        <Link href="/">Home</Link>
-                        <Link href="/about">About</Link>
-                        <Link href="/profile">Profile</Link>
-                        <Link href="/contact">Contact</Link>
-                        <Link href="/profile">Profile</Link>
-                        <div className="flex">
+                        </Button>
+                        <nav>
+                            <ul className="flex flex-col ml-4 gap-3 ">
+                                <li>
+                                    <Link href="/">Home</Link>
+                                </li>
+                                <li>
+                                    <Link href="/generate">Generate</Link>
+                                </li>
+                                <li>
+                                    <Link href="/profile">Profile</Link>
+                                </li>
+                                <li>
+                                    <Link href="/contact">Contact</Link>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <div className="flex gap-2 ml-4 items-start">
                             Translate : <GoogleTranslate />
                         </div>
 
-                        <button onClick={signOutUser}>Logout</button>
-                    </div>
+                        <Button
+                            variant={"destructive"}
+                            className={"w-max ml-4"}
+                            onClick={signOutUser}
+                        >
+                            Logout
+                        </Button>
+                    </motion.div>
                 )}
                 <button
                     className="cursor-pointer"
@@ -103,9 +134,9 @@ const Navbar = () => {
                                             opacity: 0,
                                             scale: 0.5,
                                             y: 10,
-                                        }} 
+                                        }}
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }} 
+                                        exit={{ opacity: 0, y: -10 }}
                                         transition={{
                                             duration: 0.3,
                                             ease: "easeOut",
