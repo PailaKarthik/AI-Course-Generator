@@ -14,25 +14,25 @@ import xpContext from "@/contexts/xp";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
-    const [session, setSession] = useState(null);
-    const [sidebar, setSidebar] = useState(false);
-    const [theme, setTheme] = useState("light"); // Default theme: light
-    const { xp, show, changed } = useContext(xpContext);
+  const [session, setSession] = useState(null);
+  const [sidebar, setSidebar] = useState(false);
+  const [theme, setTheme] = useState("light"); // Default theme: light
+  const { xp, show, changed } = useContext(xpContext);
 
-    // Load saved theme or use default
-    useEffect(() => {
-        const savedTheme = localStorage.getItem("theme") || "light";
-        setTheme(savedTheme);
-        document.documentElement.className = savedTheme; // Apply theme globally
-    }, []);
+  // Load saved theme or use default
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.className = savedTheme; // Apply theme globally
+  }, []);
 
-    // Toggle theme
-    const toggleTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
-        setTheme(newTheme);
-        localStorage.setItem("theme", newTheme);
-        document.documentElement.className = newTheme; // Apply theme globally
-    };
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.className = newTheme; // Apply theme globally
+  };
 
     // Fetch session
     useEffect(() => {
@@ -43,11 +43,29 @@ const Navbar = () => {
         fetchSession();
     }, []);
 
-    // Sign out user
-    const signOutUser = async () => {
-        signOuting();
-        setSession(null);
+  // Sign out user
+  const signOutUser = async () => {
+    signOuting();
+    setSession(null);
+  };
+
+  // Close sidebar on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const sidebarElement = document.querySelector(".sidebar");
+      if (sidebarElement && !sidebarElement.contains(event.target)) {
+        setSidebar(false);
+      }
     };
+
+    if (sidebar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [sidebar]);
 
     return (
         <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
