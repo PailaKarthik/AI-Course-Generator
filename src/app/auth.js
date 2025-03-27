@@ -5,6 +5,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [GitHub],
+    session: {
+        strategy: "jwt",
+      },
     callbacks: {
         async signIn({ user }) {
             try {
