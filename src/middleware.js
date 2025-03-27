@@ -28,8 +28,8 @@ export async function middleware(req) {
     cache.set(ip, token + 1);
   }
   
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  if (!token) {
+  const authtoken = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (!authtoken) {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
