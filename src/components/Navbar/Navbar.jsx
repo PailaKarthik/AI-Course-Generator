@@ -39,8 +39,6 @@ const Navbar = () => {
         const fetchSession = async () => {
             let session = await authenti();
             setSession(session);
-            console.log(session);
-            
         };
         fetchSession();
     }, []);
@@ -53,7 +51,7 @@ const Navbar = () => {
 
     return (
         <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
-            <div className="flex w-full justify-between px-3 lg:px-10 items-center">
+            <div className="flex w-full px-3 justify-between lg:px-10 items-center">
                 {sidebar && (
                     <motion.div
                         initial={{
@@ -66,7 +64,7 @@ const Navbar = () => {
                             duration: 0.1,
                             ease: "easeOut",
                         }}
-                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4"
+                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4 z-10"
                     >
                         <Button
                             variant={"ghost"}
@@ -95,14 +93,46 @@ const Navbar = () => {
                         <div className="flex gap-2 ml-4 items-start">
                             Translate : <GoogleTranslate />
                         </div>
+                        <div>
+                            <Button
+                                onClick={toggleTheme}
+                                variant={"ghost"}
+                                className={"border-0 ml-2"}
+                            >
+                                {theme === "light" ? (
+                                    <Moon></Moon>
+                                ) : (
+                                    <Sun></Sun>
+                                )}
+                            </Button>
+                            {session ? (
+                                <Link href={"/profile"}>
+                                    <Button variant={"ghost"}>
+                                        <User className="w-5" />
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Link href="/login">
+                                    <Button size="sm">Login</Button>
+                                </Link>
+                            )}
+                        </div>
 
-                        <Button
-                            variant={"destructive"}
-                            className={"w-max ml-4"}
-                            onClick={signOutUser}
-                        >
-                            Logout
-                        </Button>
+                        {session ? (
+                            <Button
+                                variant={"destructive"}
+                                className={"w-max ml-4"}
+                                onClick={signOutUser}
+                            >
+                                Logout
+                            </Button>
+                        ) : (
+                            <Link href="/login">
+                                <Button size="sm" className={"w-20 mx-4"}>
+                                    Login
+                                </Button>
+                            </Link>
+                        )}
                     </motion.div>
                 )}
                 <button
@@ -111,7 +141,7 @@ const Navbar = () => {
                 >
                     <CgDetailsMore />
                 </button>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 ">
                     <Link href="/" className="flex gap-1 items-center">
                         <Image
                             src="/YUKTHI_LOGO-removebg-preview.png"
@@ -124,7 +154,7 @@ const Navbar = () => {
                         <h2 className="text-xl font-semibold">YUKTHI</h2>
                     </Link>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center ">
                     <div className="mr-2 flex gap-3 relative">
                         xp{" "}
                         <span className="">
@@ -151,25 +181,26 @@ const Navbar = () => {
                             )}
                         </span>
                     </div>
-
-                    <Button
-                        onClick={toggleTheme}
-                        variant={"ghost"}
-                        className={"border-0 mx-2"}
-                    >
-                        {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
-                    </Button>
-                    {session ? (
-                        <Link href={"/profile"}>
-                            <Button variant={"ghost"}>
-                                <User className="w-5" />
-                            </Button>
-                        </Link>
-                    ) : (
-                        <Link href="/login">
-                            <Button size="sm">Login</Button>
-                        </Link>
-                    )}
+                    <div className="max-sm:hidden">
+                        <Button
+                            onClick={toggleTheme}
+                            variant={"ghost"}
+                            className={"border-0 mr-2"}
+                        >
+                            {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
+                        </Button>
+                        {session ? (
+                            <Link href={"/profile"}>
+                                <Button variant={"ghost"}>
+                                    <User className="w-5" />
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href="/login">
+                                <Button size="sm">Login</Button>
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

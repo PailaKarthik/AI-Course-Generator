@@ -89,13 +89,11 @@ const Page = ({ chapter, roadmapId }) => {
 
                 const chapterData = await chapterResponse.json();
                 setChapterData(chapterData.text);
-                console.log(chapterData.text);
                 setTasks(chapterData.text.tasks);
                 await addChapter(chapterData.text);
             } else if (response.ok) {
                 const data = await response.json();
                 setChapterData(data.chapter.content);
-                console.log(data.chapter.tasks);
 
                 setTasks(data.chapter.tasks);
             } else {
