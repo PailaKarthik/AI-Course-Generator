@@ -14,25 +14,25 @@ import xpContext from "@/contexts/xp";
 import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
-  const [session, setSession] = useState(null);
-  const [sidebar, setSidebar] = useState(false);
-  const [theme, setTheme] = useState("light"); // Default theme: light
-  const { xp, show, changed } = useContext(xpContext);
+    const [session, setSession] = useState(null);
+    const [sidebar, setSidebar] = useState(false);
+    const [theme, setTheme] = useState("light"); // Default theme: light
+    const { xp, show, changed } = useContext(xpContext);
 
-  // Load saved theme or use default
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    setTheme(savedTheme);
-    document.documentElement.className = savedTheme; // Apply theme globally
-  }, []);
+    // Load saved theme or use default
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        setTheme(savedTheme);
+        document.documentElement.className = savedTheme; // Apply theme globally
+    }, []);
 
-  // Toggle theme
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.className = newTheme; // Apply theme globally
-  };
+    // Toggle theme
+    const toggleTheme = () => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        document.documentElement.className = newTheme; // Apply theme globally
+    };
 
     // Fetch session
     useEffect(() => {
@@ -43,29 +43,29 @@ const Navbar = () => {
         fetchSession();
     }, []);
 
-  // Sign out user
-  const signOutUser = async () => {
-    signOuting();
-    setSession(null);
-  };
-
-  // Close sidebar on click outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const sidebarElement = document.querySelector(".sidebar");
-      if (sidebarElement && !sidebarElement.contains(event.target)) {
-        setSidebar(false);
-      }
+    // Sign out user
+    const signOutUser = async () => {
+        signOuting();
+        setSession(null);
     };
 
-    if (sidebar) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
+    // Close sidebar on click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const sidebarElement = document.querySelector(".sidebar");
+            if (sidebarElement && !sidebarElement.contains(event.target)) {
+                setSidebar(false);
+            }
+        };
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [sidebar]);
+        if (sidebar) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [sidebar]);
 
     return (
         <div className="p-2 w-screen border-b fixed top-0 left-0 bg-background/60 backdrop-blur-md z-50">
@@ -111,7 +111,7 @@ const Navbar = () => {
                         <div className="flex gap-2 ml-4 items-start">
                             Translate : <GoogleTranslate />
                         </div>
-                        <div>
+                        <div className="md:hidden">
                             <Button
                                 onClick={toggleTheme}
                                 variant={"ghost"}
@@ -173,32 +173,38 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="flex items-center ">
-                    <div className="mr-2 flex gap-3 relative">
-                        xp{" "}
-                        <span className="">
-                            {xp}
-                            {show && (
-                                <AnimatePresence>
-                                    <motion.div
-                                        initial={{
-                                            opacity: 0,
-                                            scale: 0.5,
-                                            y: 10,
-                                        }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{
-                                            duration: 0.3,
-                                            ease: "easeOut",
-                                        }}
-                                        className="absolute text-green-600 right-0 w-7"
-                                    >
-                                        <p>+{changed}</p>
-                                    </motion.div>
-                                </AnimatePresence>
-                            )}
-                        </span>
-                    </div>
+                    { session && 
+                        <div className="mr-2 flex gap-3 relative">
+                            xp{" "}
+                            <span className="">
+                                {xp}
+                                {show && (
+                                    <AnimatePresence>
+                                        <motion.div
+                                            initial={{
+                                                opacity: 0,
+                                                scale: 0.5,
+                                                y: 10,
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                scale: 1,
+                                                y: 0,
+                                            }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{
+                                                duration: 0.3,
+                                                ease: "easeOut",
+                                            }}
+                                            className="absolute text-green-600 right-0 w-7"
+                                        >
+                                            <p>+{changed}</p>
+                                        </motion.div>
+                                    </AnimatePresence>
+                                )}
+                            </span>
+                        </div>
+                    }
                     <div className="max-sm:hidden">
                         <Button
                             onClick={toggleTheme}
