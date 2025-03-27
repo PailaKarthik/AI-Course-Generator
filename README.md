@@ -28,6 +28,17 @@ With innovation, flexibility, and logical reasoning (Yukthi) as our core princip
 6. **Adaptive Learning Experience:**
 - Courses adjust based on user input, ensuring a flexible and tailored learning journey.
 
+## Technologies Used
+1. **Gemini API** – Used to generate AI-driven, chapter-wise course content with interactive learning tasks.
+
+2. **Firebase** – Backend services for authentication, database management, and hosting.
+
+3. **Next.js** – Framework for building the frontend with optimized performance and SEO capabilities.
+
+4. **Shadcn UI** – Used for building modern and responsive UI components.
+
+5. **Auth.js** – Secure authentication and user management system.
+
 ## Website Photos  
 
  ![image](https://github.com/user-attachments/assets/d92b9b3e-117b-423f-a0f0-ec85d94b531d)
@@ -66,35 +77,28 @@ With innovation, flexibility, and logical reasoning (Yukthi) as our core princip
    ```
 6. Run the development server:
 
-  ```bash
-  npm run dev
-  # or
-  yarn dev
-  # or
-  pnpm dev
-  # or
-  bun dev
-  ```
+   ```
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    # or
+    bun dev
+   ```
 7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-8. Access the Yukthi website at the specified URL.
+8. Access the Yukthi website at the specified URL: [https://yukthi-three.vercel.app](https://yukthi-three.vercel.app)
 
 ## Usage Instructions
-1. Log in to the admin dashboard using your credentials.
-2. Navigate through the different sections to manage course creation,  etc.
-3. Use the provided forms and interfaces to add, edit, or delete various items.
-4. Monitor dashboard metrics and statistics to track the performance of the application.
+1. Log in to the dashboard using your credentials.
+2. Navigate through the different sections to manage course creation, learning courses, etc.
+3. Use the interfaces to check profile, xps earned, courses completed, etc.
 
 ## Contributing
 
 We welcome contributions from the community to enhance Yukthi. If you have any feature suggestions, bug reports, or code improvements, please feel free to submit a pull request or open an issue on GitHub.
 
-## Acknowledgements
-
-Special thanks to the following resources and contributors:
-
-- Firebase for providing backend services such as authentication, data storage, and cloud functions, which have been instrumental in the development of the Marine Marvel Android app.
-
 
 ## Conclusion
- We hope this documentation provides you with all the necessary information to install, configure, and use the admin interface effectively.  
+ We hope this documentation provides you with all the necessary information to install, configure, and use the interface effectively.  
 
