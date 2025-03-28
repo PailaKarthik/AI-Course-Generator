@@ -3,7 +3,7 @@ import { LRUCache } from "lru-cache";
 import { auth } from "./app/auth";
 
 const rateLimitOptions = {
-    max: 2,
+    max: 20,
     ttl: 60 * 1000,
 };
 

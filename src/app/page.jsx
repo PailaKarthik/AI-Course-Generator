@@ -24,7 +24,7 @@ export default function page() {
     }, []);
 
     return (
-        <div className="max-w-6xl flex flex-col mb-96 gap-4 items-center p-4 mx-auto">
+        <div className="max-w-6xl flex flex-col gap-4 items-center p-4 mb-16 mx-auto">
             <h1 className="text-2xl font-semibold self-start">YOUR COURSES </h1>
             <div className="flex gap-6 justify-center flex-wrap">
                 {loading ? (
@@ -40,38 +40,42 @@ export default function page() {
                         })
                 ) : (
                     <>
-                        {roadmaps?.map((roadmap) => (
-                            <Card
-                                key={roadmap.id}
-                                className={"w-[320px] relative"}
-                            >
-                                <CardHeader>
-                                    <CardTitle>
-                                        {roadmap?.courseTitle?.split(":")[0] ||
-                                            ""}
-                                    </CardTitle>
-                                    <div className="absolute z-10 top-0 right-0">
-                                        <DeleteRoadmap
-                                            id={roadmap.id}
-                                            onDelete={() => {
-                                                fetchRoadmaps();
-                                                hideLoader();
-                                            }}
-                                        ></DeleteRoadmap>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    {roadmap.courseDescription}
-                                </CardContent>
+                        {roadmaps?.map((roadmap) => {
+                            
+                            if (roadmap.process === "completed") return (
+                                <Card
+                                    key={roadmap.id}
+                                    className={"w-[320px] relative"}
+                                >
+                                    <CardHeader>
+                                        <CardTitle>
+                                            {roadmap?.courseTitle?.split(
+                                                ":"
+                                            )[0] || ""}
+                                        </CardTitle>
+                                        <div className="absolute z-10 top-0 right-0">
+                                            <DeleteRoadmap
+                                                id={roadmap.id}
+                                                onDelete={() => {
+                                                    fetchRoadmaps();
+                                                    hideLoader();
+                                                }}
+                                            ></DeleteRoadmap>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {roadmap.courseDescription}
+                                    </CardContent>
 
-                                <Link href={`/roadmap/${roadmap.id}`}>
-                                    <span className="absolute inset-0"></span>
-                                </Link>
-                            </Card>
-                        ))}
+                                    <Link href={`/roadmap/${roadmap.id}`}>
+                                        <span className="absolute inset-0"></span>
+                                    </Link>
+                                </Card>
+                            );
+                        })}
                         <Card
                             className={
-                                "w-[320px] relative flex items-center justify-center"
+                                "w-[320px] relative flex items-center justify-center border-3 border-dotted"
                             }
                         >
                             <div className="flex flex-col items-center text-accent-foreground/70">

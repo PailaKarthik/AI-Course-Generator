@@ -38,13 +38,16 @@ export async function GET(req, { params }) {
 
         const docSnap = await getDoc(docRef);
         const taskSnap = await getDoc(taskDocRef);
-        if (!docSnap.exists() || !taskSnap.exists()) {
+        if (docSnap.exists() && docSnap.data().process === "pending") {
+            return NextResponse.json({ chapter: { process: "pending" } });
+        }
+        if (!docSnap.exists()) {
             return NextResponse.json(
                 { message: "Chapter not found" },
                 { status: 404 }
             );
         }
-        const tasks = Object.values(taskSnap.data())
+        const tasks = Object.values(taskSnap.data());
 
         return NextResponse.json({
             chapter: { ...docSnap.data(), tasks },

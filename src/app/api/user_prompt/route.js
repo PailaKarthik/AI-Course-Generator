@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { auth } from "@/app/auth";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import { doc, updateDoc, increment, setDoc } from "firebase/firestore";
+import { nanoid } from "nanoid";
+
+async function updateDatabase(details, id, user) {
+    const docref = doc(db, "users", user.email, "roadmaps", id);
+    await setDoc(docref, details);
+}
 
 export const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -25,13 +31,7 @@ function parseJson(response) {
     }
 }
 
-// Post request to generate the roadmap
-export async function POST(req, res) {
-    let user_prompt = await req.json();
-    const session = await auth();
-    if (!session) {
-        return NextResponse.json({ message: "unauthorized" }, { status: 401 });
-    }
+async function generateRoadmap(prompt, id, session, user_prompt) {
     try {
         const response = await openai.chat.completions.create({
             model: "gemini-2.0-flash",
@@ -43,16 +43,22 @@ export async function POST(req, res) {
                 },
                 {
                     role: "user",
-                    content: user_prompt.prompt,
+                    content: prompt,
                 },
             ],
         });
         const parsedResponse = parseJson(response.choices[0].message.content);
         if (parsedResponse.error) {
-            return NextResponse.json(
-                { message: "Please enter a valid concept" },
-                { status: 404 }
+            await updateDatabase(
+                {
+                    message:
+                        "The provided concept is unsuitable for forming a course.",
+                    process: "unsuitable",
+                },
+                id,
+                session.user
             );
+            return;
         }
         const docRef = doc(db, "users", session.user.email);
         const difficulty =
@@ -62,8 +68,50 @@ export async function POST(req, res) {
         await updateDoc(docRef, {
             [`roadmapLevel.${difficulty}`]: increment(1),
         });
-        return NextResponse.json({ text: parsedResponse });
+        await updateDatabase(
+            {
+                ...parsedResponse,
+                createdAt: Date.now(),
+                difficulty,
+            },
+            id,
+            session.user
+        );
+        const roadmapRef = doc(db, "users", session.user.email, "roadmaps", id);
+        await updateDoc(roadmapRef, {
+            process: "completed",
+        });
     } catch (error) {
+        await updateDatabase(
+            {
+                message: "There was an error while generating your roadmap. ",
+                process: "error",
+            },
+            id,
+            session.user
+        );
+    }
+}
+
+// Post request to generate the roadmap
+export async function POST(req) {
+    let user_prompt = await req.json();
+    const session = await auth();
+    if (!session) {
+        return NextResponse.json({ message: "unauthorized" }, { status: 401 });
+    }
+    try {
+        const roadmapId = nanoid(20);
+        await updateDatabase({ process: "pending" }, roadmapId, session.user);
+        generateRoadmap(user_prompt.prompt, roadmapId, session, user_prompt);
+
+        return NextResponse.json(
+            { process: "pending", id: roadmapId },
+            { status: 202 }
+        );
+    } catch (error) {
+        console.log({ error });
+
         return NextResponse.json({ message: error }, { status: 500 });
     }
 }

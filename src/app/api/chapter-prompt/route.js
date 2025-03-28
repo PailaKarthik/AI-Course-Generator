@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { auth } from "@/app/auth";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -16,16 +19,40 @@ function parseJson(response) {
             return jsonData;
         } catch (error) {
             console.error("Error parsing JSON:", error);
-            return NextResponse.json({ error }, { status: 500 });
         }
     } else {
         console.error("No JSON found in the response");
     }
 }
 
-// Post request to generate the capter contents
-export async function POST(req, res) {
-    let { prompt } = await req.json();
+async function updateDatabase(content, chapter, roadmapId) {
+    const session = await auth();
+    const { tasks, ...chapterNew } = content;
+    const docRef = doc(
+        db,
+        "users",
+        session.user.email,
+        "roadmaps",
+        roadmapId,
+        "chapters",
+        chapter
+    );
+    await setDoc(docRef, { content: chapterNew, process: "completed" });
+    const taskDocRef = doc(
+        db,
+        "users",
+        session.user.email,
+        "roadmaps",
+        roadmapId,
+        "chapters",
+        chapter,
+        "tasks",
+        "task"
+    );
+    await setDoc(taskDocRef, { ...tasks });
+}
+
+async function generateChapter(prompt, number, roadmapId) {
     try {
         const response = await openai.chat.completions.create({
             model: "gemini-2.0-flash",
@@ -44,7 +71,46 @@ export async function POST(req, res) {
 
         const data = parseJson(response.choices[0].message.content);
 
-        return NextResponse.json({ text: data });
+        await updateDatabase(data, number, roadmapId);
+    } catch (error) {
+        await deleteDoc(
+            doc(
+                db,
+                "users",
+                session.user.email,
+                "roadmaps",
+                roadmapId,
+                "chapters",
+                number
+            )
+        );
+    }
+}
+
+// Post request to generate the capter contents
+export async function POST(req, res) {
+    let { prompt, number, roadmapId } = await req.json();
+    const session = await auth();
+    try {
+        await setDoc(
+            doc(
+                db,
+                "users",
+                session.user.email,
+                "roadmaps",
+                roadmapId,
+                "chapters",
+                number
+            ),
+            {
+                process: "pending",
+            }
+        );
+        console.log("done");
+        
+        generateChapter(prompt, number, roadmapId);
+
+        return NextResponse.json({ process: "pending" }, { status: 202 });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error }, { status: 500 });

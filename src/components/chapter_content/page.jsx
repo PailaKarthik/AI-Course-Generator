@@ -50,52 +50,24 @@ const Page = ({ chapter, roadmapId }) => {
     async function fetchChapter() {
         setIsLoading(true);
         setError(null);
+        setNotFound(false);
 
         try {
             const response = await fetch(
                 `/api/get-chapter/${roadmapId}/${chapter}`
             );
 
-            if (response.status === 404) {
-                const roadmap = await getRoadmap();
-
-                if (!roadmap) {
-                    setNotFound(true);
-                    setIsLoading(false);
-                    return;
-                }
-
-                const chapterDetails = roadmap.chapters.find(
-                    (ch) => ch.chapterNumber === Number(chapter)
-                );
-
-                if (!chapterDetails) {
-                    setNotFound(true);
-                    setIsLoading(false);
-                    return;
-                }
-                setGenerating(true);
-
-                const chapterResponse = await fetch(`/api/chapter-prompt`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt: chapterDetails }),
-                });
-
-                if (!chapterResponse.ok) {
-                    throw new Error("Failed to generate chapter content");
-                }
-                setGenerating(false);
-
-                const chapterData = await chapterResponse.json();
-                setChapterData(chapterData.text);
-                setTasks(chapterData.text.tasks);
-                await addChapter(chapterData.text);
-            } else if (response.ok) {
+            if (response.ok) {
                 const data = await response.json();
-                setChapterData(data.chapter.content);
 
-                setTasks(data.chapter.tasks);
+                if (data.chapter.process === "pending") {
+                    await handlePendingChapter();
+                } else {
+                    setChapterData(data.chapter.content);
+                    setTasks(data.chapter.tasks);
+                }
+            } else if (response.status === 404) {
+                await handleNotFoundChapter();
             } else {
                 throw new Error(`Failed to fetch chapter: ${response.status}`);
             }
@@ -107,23 +79,90 @@ const Page = ({ chapter, roadmapId }) => {
         }
     }
 
-    async function addChapter(chapterContent) {
+    async function handlePendingChapter() {
+        setGenerating(true);
+
+        return new Promise((resolve, reject) => {
+            const fetchInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(
+                        `/api/get-chapter/${roadmapId}/${chapter}`
+                    );
+
+                    if (res.status === 404) {
+                        clearInterval(fetchInterval);
+                        toast.error(
+                            "There was an error while generating your chapter"
+                        );
+                        setGenerating(false);
+                        reject(new Error("Chapter generation failed"));
+                        return;
+                    }
+
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch: ${res.status}`);
+                    }
+
+                    const chapterData = await res.json();
+
+                    if (chapterData.chapter.process === "completed") {
+                        clearInterval(fetchInterval);
+                        setChapterData(chapterData.chapter.content);
+                        setTasks(chapterData.chapter.tasks);
+                        setGenerating(false);
+                        resolve();
+                    }
+                } catch (error) {
+                    clearInterval(fetchInterval);
+                    setGenerating(false);
+                    console.error("Error during polling:", error);
+                    toast.error("Error checking chapter generation status");
+                    reject(error);
+                }
+            }, 3000);
+        });
+    }
+
+    async function handleNotFoundChapter() {
+        const roadmap = await getRoadmap();
+
+        if (!roadmap) {
+            setNotFound(true);
+            return;
+        }
+
+        const chapterDetails = roadmap.chapters.find(
+            (ch) => ch.chapterNumber === Number(chapter)
+        );
+
+        if (!chapterDetails) {
+            setNotFound(true);
+            return;
+        }
+
+        setGenerating(true);
+
         try {
-            const response = await fetch(`/api/get-chapter`, {
+            const chapterResponse = await fetch("/api/chapter-prompt", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    prompt: chapterDetails,
+                    number: chapter,
                     roadmapId,
-                    chapter,
-                    content: chapterContent,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error(`Failed to save chapter: ${response.status}`);
+            if (chapterResponse.status === 202) {
+                await handlePendingChapter();
+            } else if (!chapterResponse.ok) {
+                throw new Error(
+                    `Failed to start chapter generation: ${chapterResponse.status}`
+                );
             }
         } catch (error) {
-            console.error("Error adding chapter:", error);
+            console.error("Error starting chapter generation:", error);
+            toast.error("Failed to start chapter generation.");
         }
     }
 
@@ -202,7 +241,7 @@ const Page = ({ chapter, roadmapId }) => {
     }, [roadmapId, chapter]);
 
     useEffect(() => {
-        const rm = { ...roadmap }; //temporary variable to hold roadmap
+        const rm = { ...roadmap };
         for (const element of tasks) {
             const type = element.type.split("-");
             let displayType = "";
@@ -210,7 +249,7 @@ const Page = ({ chapter, roadmapId }) => {
                 displayType += word[0].toUpperCase() + word.slice(1) + " ";
             }
             if (rm.chapters) {
-                rm.chapters[Number(chapter - 1)].contentOutline.length < //condition to resolve duplicate render issue
+                rm.chapters[Number(chapter - 1)].contentOutline.length <
                     chapterData.subtopics.length + tasks.length &&
                     rm.chapters[Number(chapter - 1)]?.contentOutline.push(
                         `Task > ${displayType}`

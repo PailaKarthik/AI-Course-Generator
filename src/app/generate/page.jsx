@@ -131,36 +131,29 @@ export default function Page() {
             body: JSON.stringify({ prompt, difficulty: data.difficultyLevel }),
         });
 
-        let responseData = await res.json();
+        const roadmapData = await res.json();
+        const id = roadmapData.id;
 
-        if (res.status === 404) {
-            toast.error(
-                "The provided concept is unsuitable for forming a course."
-            );
-            setIsSubmitting(false);
-            return;
-        } else if (res.status === 500) {
-            toast.error("There was an error while generating your roadmap.");
-            setIsSubmitting(false);
-            return;
-        }
-
-        let roadmapResponse = await fetch("/api/roadmap", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                roadmap: responseData,
-                difficulty: data.difficultyLevel,
-            }),
-        });
-
-        if (roadmapResponse.ok) {
-            const id = await roadmapResponse.json();
-            toast.success("Roadmap generated successfully");
-            router.push(`/roadmap/${id.text}`);
-        } else {
+        if (!id) {
             toast.error("Failed to generate roadmap");
+            setIsSubmitting(false);
+            return;
         }
+
+        const interval = setInterval(async () => {
+            let res = await fetch(`/api/roadmap/${id}`);
+            let data = await res.json();
+            if (data.process !== "pending") {
+                clearInterval(interval);
+                if (data.process === "completed") {
+                    toast.success("Roadmap generated successfully");
+                    router.push(`/roadmap/${id}`);
+                } else if (data.process === "error") {
+                    toast.error(data.message);
+                }
+                setIsSubmitting(false);
+            }
+        }, 3000);
     };
 
     const knowledgeLevelOptions = [

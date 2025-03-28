@@ -26,6 +26,7 @@ export async function GET() {
                 courseDescription: doc.data().courseDescription,
                 completed: doc.data().completed,
                 createdAt: doc.data().createdAt,
+                process: doc.data().process,
                 difficulty: doc.data().difficulty,
             }))
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
