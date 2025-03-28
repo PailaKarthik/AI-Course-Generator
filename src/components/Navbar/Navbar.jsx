@@ -39,6 +39,7 @@ const Navbar = () => {
         const fetchSession = async () => {
             let session = await authenti();
             setSession(session);
+            console.log(session);
         };
         fetchSession();
     }, []);
@@ -52,16 +53,25 @@ const Navbar = () => {
     // Close sidebar on click outside
     useEffect(() => {
         const handleClickOutside = (event) => {
+            // Check if the clicked target is outside the sidebar and the button that opens it
             const sidebarElement = document.querySelector(".sidebar");
-            if (sidebarElement && !sidebarElement.contains(event.target)) {
-                setSidebar(false);
+            const buttonElement = document.querySelector("button"); // The button to open sidebar
+
+            if (
+                sidebarElement &&
+                !sidebarElement.contains(event.target) &&
+                !buttonElement.contains(event.target)
+            ) {
+                setSidebar(false); // Close sidebar if the click is outside
             }
         };
 
+        // Add event listener when sidebar is open
         if (sidebar) {
             document.addEventListener("mousedown", handleClickOutside);
         }
 
+        // Clean up the event listener when the component unmounts or sidebar is closed
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -82,7 +92,7 @@ const Navbar = () => {
                             duration: 0.1,
                             ease: "easeOut",
                         }}
-                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4 z-10"
+                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4 z-10 sidebar"
                     >
                         <Button
                             variant={"ghost"}
@@ -118,9 +128,9 @@ const Navbar = () => {
                                 className={"border-0 ml-2"}
                             >
                                 {theme === "light" ? (
-                                    <Moon></Moon>
+                                    <Moon />
                                 ) : (
-                                    <Sun></Sun>
+                                    <Sun />
                                 )}
                             </Button>
                             {session ? (
@@ -155,7 +165,10 @@ const Navbar = () => {
                 )}
                 <button
                     className="cursor-pointer"
-                    onClick={() => setSidebar(true)}
+                    onClick={(e) => {
+                        setSidebar(true);
+                        e.stopPropagation(); // Prevent the event from bubbling up
+                    }}
                 >
                     <CgDetailsMore />
                 </button>
@@ -173,7 +186,7 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="flex items-center ">
-                    { session && 
+                    {session && (
                         <div className="mr-2 flex gap-3 relative">
                             xp{" "}
                             <span className="">
@@ -204,14 +217,14 @@ const Navbar = () => {
                                 )}
                             </span>
                         </div>
-                    }
+                    )}
                     <div className="max-sm:hidden">
                         <Button
                             onClick={toggleTheme}
                             variant={"ghost"}
                             className={"border-0 mr-2"}
                         >
-                            {theme === "light" ? <Moon></Moon> : <Sun></Sun>}
+                            {theme === "light" ? <Moon /> : <Sun />}
                         </Button>
                         {session ? (
                             <Link href={"/profile"}>
