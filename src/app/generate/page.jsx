@@ -144,13 +144,13 @@ export default function Page() {
             let res = await fetch(`/api/roadmap/${id}`);
             let data = await res.json();
             if (data.process !== "pending") {
-                clearInterval(interval);
                 if (data.process === "completed") {
                     toast.success("Roadmap generated successfully");
                     router.push(`/roadmap/${id}`);
-                } else if (data.process === "error") {
+                }else if (data.process === "error") {
                     toast.error(data.message);
                 }
+                clearInterval(interval);
                 setIsSubmitting(false);
             }
         }, 3000);
