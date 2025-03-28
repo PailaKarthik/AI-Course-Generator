@@ -147,11 +147,11 @@ export default function Page() {
                 if (data.process === "completed") {
                     toast.success("Roadmap generated successfully");
                     router.push(`/roadmap/${id}`);
-                }else if (data.process === "error") {
+                } else if (data.process === "error") {
                     toast.error(data.message);
+                    setIsSubmitting(false);
                 }
                 clearInterval(interval);
-                setIsSubmitting(false);
             }
         }, 3000);
     };
