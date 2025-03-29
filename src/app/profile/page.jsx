@@ -58,7 +58,7 @@ export default function Page() {
     return (
         <div className="flex min-h-screen max-w-6xl pt-4 mx-auto flex-col">
             <main className="flex-1">
-                <div className="container py-6">
+                <div className="container mx-auto max-md:pb-6 md:py-6">
                     <div className="grid gap-6 mx-4 relative md:grid-cols-[1fr_3fr]">
                         <Sidebar user={userData} rank={rank} difficultyLevel= {difficultyLevel} />
 

@@ -1,8 +1,8 @@
 "use client";
 import { Loader } from "lucide-react";
 import { motion } from "framer-motion";
-import { createContext, useContext, useState } from "react";
-
+import { createContext, useContext, useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 const LoaderContext = createContext();
 
 const ToastLoader = () => {
@@ -22,8 +22,43 @@ const ToastLoader = () => {
 
 export default function LoaderProvider({ children }) {
     const [loading, setLoading] = useState(false);
+    const pathName = usePathname();
     const showLoader = () => setLoading(true);
     const hideLoader = () => setLoading(false);
+
+    const handleGlobalLinkClick = (event) => {
+        let target = event.target;
+        const skipHashes = ["#features", "#how-it-works", "#faq"]; 
+    
+        while (target && target.tagName !== "A") {
+            target = target.parentElement;
+        }
+    
+        if (target && target.href) {
+            const url = new URL(target.href);
+            const hash = url.hash; 
+    
+            if (
+                target.href.includes(window.location.origin) && 
+                target.href !== window.location.href && 
+                !(hash && skipHashes.includes(hash)) 
+            ) {
+                showLoader();
+            }
+        }
+    };
+    
+    
+
+    useEffect(() => {
+        hideLoader();
+    }, [pathName]);
+
+    useEffect(() => {
+        document.addEventListener("click", handleGlobalLinkClick);
+        return () =>
+            document.removeEventListener("click", handleGlobalLinkClick);
+    }, []);
 
     return (
         <LoaderContext.Provider value={{ showLoader, hideLoader }}>

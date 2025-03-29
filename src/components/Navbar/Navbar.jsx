@@ -3,22 +3,25 @@ import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { User, LogIn } from "lucide-react";
 import { CgDetailsMore } from "react-icons/cg";
-import { authenti, signOuting } from "./new";
+import { authenti } from "./new";
 import { Sun, Moon } from "lucide-react";
 import Image from "next/image";
 import GoogleTranslate from "../GoogleTranslate";
 import { useContext } from "react";
 import xpContext from "@/contexts/xp";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import Logout from "./Logout";
 
 const Navbar = () => {
     const [session, setSession] = useState(null);
     const [sidebar, setSidebar] = useState(false);
     const [theme, setTheme] = useState("light"); // Default theme: light
     const { xp, show, changed } = useContext(xpContext);
-
+    const router = useRouter();
     // Load saved theme or use default
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme") || "light";
@@ -39,15 +42,15 @@ const Navbar = () => {
         const fetchSession = async () => {
             let session = await authenti();
             setSession(session);
-            console.log(session);
         };
         fetchSession();
     }, []);
 
     // Sign out user
     const signOutUser = async () => {
-        signOuting();
+        await signOut();
         setSession(null);
+        router.push("/");
     };
 
     // Close sidebar on click outside
@@ -60,7 +63,9 @@ const Navbar = () => {
             if (
                 sidebarElement &&
                 !sidebarElement.contains(event.target) &&
-                !buttonElement.contains(event.target)
+                !buttonElement.contains(event.target) &&
+                event.target.textContent !== "Logout" &&
+                event.target.textContent !== "Cancel"
             ) {
                 setSidebar(false); // Close sidebar if the click is outside
             }
@@ -92,88 +97,160 @@ const Navbar = () => {
                             duration: 0.1,
                             ease: "easeOut",
                         }}
-                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col gap-4 p-4 z-10 sidebar"
+                        className="w-[360px] h-screen bg-background fixed top-0 left-0 flex flex-col justify-between p-4 z-10 sidebar"
                     >
-                        <Button
-                            variant={"ghost"}
-                            className="items-center w-max"
-                            onClick={() => setSidebar(false)}
-                        >
-                            <IoClose />
-                        </Button>
-                        <nav>
-                            <ul className="flex flex-col ml-4 gap-3 ">
-                                <li>
-                                    <Link href="/">Home</Link>
-                                </li>
-                                <li>
-                                    <Link href="/generate">Generate</Link>
-                                </li>
-                                <li>
-                                    <Link href="/profile">Profile</Link>
-                                </li>
-                                <li>
-                                    <Link href="/contact">Contact</Link>
-                                </li>
-                            </ul>
-                        </nav>
-
-                        <div className="flex gap-2 ml-4 items-start">
-                            Translate : <GoogleTranslate />
-                        </div>
-                        <div className="md:hidden">
+                        <div className="flex flex-col gap-3">
                             <Button
-                                onClick={toggleTheme}
                                 variant={"ghost"}
-                                className={"border-0 ml-2"}
+                                className="items-center w-max"
+                                onClick={() => setSidebar(false)}
                             >
-                                {theme === "light" ? (
-                                    <Moon />
-                                ) : (
-                                    <Sun />
-                                )}
+                                <IoClose />
                             </Button>
                             {session ? (
-                                <Link href={"/profile"}>
-                                    <Button variant={"ghost"}>
-                                        <User className="w-5" />
-                                    </Button>
-                                </Link>
+                                <nav>
+                                    <ul className="flex flex-col max-md:text-lg ml-4 gap-3 ">
+                                        <li onClick={() => setSidebar(false)}>
+                                            <Link
+                                                href={
+                                                    session ? `/roadmap` : "/"
+                                                }
+                                            >
+                                                Home
+                                            </Link>
+                                        </li>
+                                        <li onClick={() => setSidebar(false)}>
+                                            <Link href="/generate">
+                                                Generate
+                                            </Link>
+                                        </li>
+                                        <li onClick={() => setSidebar(false)}>
+                                            <Link href="/profile">Profile</Link>
+                                        </li>
+                                        <li onClick={() => setSidebar(false)}>
+                                            <Link href="/contact">Contact</Link>
+                                        </li>
+                                    </ul>
+                                </nav>
                             ) : (
-                                <Link href="/login">
-                                    <Button size="sm">Login</Button>
-                                </Link>
-                            )}
-                        </div>
+                                <nav>
+                                    <ul className="flex flex-col max-md:text-lg ml-4 gap-3 ">
+                                        <li
+                                            onClick={() => {
+                                                setSidebar(false);
+                                                document
+                                                    .getElementById("features")
+                                                    ?.scrollIntoView({
+                                                        behavior: "smooth",
+                                                    });
+                                            }}
+                                        >
+                                            <Link
+                                                href="#features"
+                                                scroll={false}
+                                            >
+                                                Features
+                                            </Link>
+                                        </li>
+                                        <li
+                                            onClick={() => {
+                                                setSidebar(false);
+                                                document
+                                                    .getElementById(
+                                                        "how-it-works"
+                                                    )
+                                                    ?.scrollIntoView({
+                                                        behavior: "smooth",
+                                                    });
+                                            }}
+                                        >
+                                            <Link
+                                                href="#how-it-works"
+                                                scroll={false}
+                                            >
+                                                How to use
+                                            </Link>
+                                        </li>
+                                        <li
+                                            onClick={() => {
+                                                setSidebar(false);
+                                                document
+                                                    .getElementById("faq")
+                                                    ?.scrollIntoView({
+                                                        behavior: "smooth",
+                                                    });
+                                            }}
+                                        >
+                                            <Link href="#faq" scroll={false}>
+                                                FAQs
+                                            </Link>
+                                        </li>
 
-                        {session ? (
-                            <Button
-                                variant={"destructive"}
-                                className={"w-max ml-4"}
-                                onClick={signOutUser}
-                            >
-                                Logout
-                            </Button>
-                        ) : (
-                            <Link href="/login">
-                                <Button size="sm" className={"w-20 mx-4"}>
-                                    Login
+                                        <li onClick={() => setSidebar(false)}>
+                                            <Link href="/contact">Contact</Link>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            )}
+
+                            <div className="flex gap-3 max-md:text-lg ml-4 items-start">
+                                Translate : <GoogleTranslate />
+                            </div>
+                        </div>
+                        <div className="mb-3">
+                            <div className="flex items-center">
+                                <Button
+                                    onClick={toggleTheme}
+                                    variant={"ghost"}
+                                    className={"border-0 ml-2"}
+                                >
+                                    {theme === "light" ? <Moon /> : <Sun />}
                                 </Button>
-                            </Link>
-                        )}
+                                {session ? (
+                                    <div className="flex items-center">
+                                        <Link
+                                            href={"/profile"}
+                                            onClick={() => setSidebar(false)}
+                                        >
+                                            <Button variant={"ghost"}>
+                                                <User className="w-5" />
+                                            </Button>
+                                        </Link>
+                                        <Logout
+                                            onConfirm={signOutUser}
+                                        ></Logout>
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setSidebar(false)}
+                                    >
+                                        <Button size="sm">
+                                            <LogIn></LogIn>Login
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
                     </motion.div>
                 )}
-                <button
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                        setSidebar(true);
-                        e.stopPropagation(); // Prevent the event from bubbling up
-                    }}
-                >
-                    <CgDetailsMore />
-                </button>
+                <div className="sm:w-[120px] w-[50px]">
+                    <button
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                            setSidebar(true);
+                            e.stopPropagation();
+                        }}
+                    >
+                        <CgDetailsMore />
+                    </button>
+                </div>
+
                 <div className="flex items-center gap-1 ">
-                    <Link href="/" className="flex gap-1 items-center">
+                    <Link
+                        href={session ? `/roadmap` : "/"}
+                        className="flex gap-1 items-center"
+                    >
                         <Image
                             src="/YUKTHI_LOGO-removebg-preview.png"
                             alt="logo"
@@ -185,7 +262,7 @@ const Navbar = () => {
                         <h2 className="text-xl font-semibold">YUKTHI</h2>
                     </Link>
                 </div>
-                <div className="flex items-center ">
+                <div className="flex items-center w-[152px] justify-center ">
                     {session && (
                         <div className="mr-2 flex gap-3 relative">
                             xp{" "}

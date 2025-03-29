@@ -1,0 +1,39 @@
+import Hero from "./Hero";
+import Features from "./Features";
+import HowItWorks from "./HowItWorks";
+import Image from "next/image";
+import Testimonials from "./Testimonials";
+import CTA from "./CTA";
+import FAQ from "./FAQ";
+export default function Landing() {
+    return (
+        <div className="flex min-h-screen flex-col">
+            <div className="flex flex-col items-center" >
+                <Hero></Hero>
+                <Features></Features>
+                <HowItWorks></HowItWorks>
+                <FAQ></FAQ>
+                <Testimonials></Testimonials>
+                <CTA></CTA>
+                <footer className="border-t py-6 px-10   md:py-0">
+                    <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+                        <div className="flex items-center gap-2 font-bold">
+                            <Image
+                                src={"/YUKTHI_LOGO-removebg-preview.png"}
+                                className="scale-180 dark:invert-100"
+                                alt="logo"
+                                width={20}
+                                height={20}
+                            ></Image>
+                            <span>Yukthi</span>
+                        </div>
+                        <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+                            © 2025 Yukthi. All rights reserved.
+                        </p>
+                        <div className="flex w-24 items-center gap-4"></div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    );
+}

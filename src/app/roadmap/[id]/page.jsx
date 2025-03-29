@@ -48,7 +48,7 @@ const page = async ({ params }) => {
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/components">
+                            <BreadcrumbLink href="/roadmap">
                                 Roadmap
                             </BreadcrumbLink>
                         </BreadcrumbItem>

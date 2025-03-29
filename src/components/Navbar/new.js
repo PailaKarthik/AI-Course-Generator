@@ -7,5 +7,6 @@ export const authenti = async () => {
   
   export const signOuting = async () => {
     await signOut();
+    return null
   };
   

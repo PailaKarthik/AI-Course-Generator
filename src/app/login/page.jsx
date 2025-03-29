@@ -10,12 +10,12 @@ export default function SignIn() {
 
     useEffect(() => {
         if (session) {
-            router.push("/");
+            router.push("/roadmap");
         }
     }, [session, router]);
 
     return (
-        <div className="h-full">
+        <div className="min-h-[calc(100vh-64px)]">
             <div className="relative h-full py-16 bg-gradient-to-br from-sky-50 dark:from-sky-950/20 to-gray-200 dark:to-zinc-950">
                 <div className="relative container m-auto px-6 md:px-12 xl:px-40">
                     <div className="m-auto md:w-8/12 lg:w-6/12 xl:w-6/12">
@@ -31,7 +31,7 @@ export default function SignIn() {
                                     <button
                                         onClick={() => signIn("github")}
                                         className="group h-12 px-6 border-2 rounded-full transition duration-300 
-                                            hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
+                                            hover:border-blue-400 +"
                                     >
                                         <div className="relative w-full flex items-center space-x-4 justify-center">
                                             <svg
@@ -51,7 +51,7 @@ export default function SignIn() {
                                     <button
                                         onClick={() => signIn("google")}
                                         className="group h-12 px-6 border-2 rounded-full transition duration-300 
-                                            hover:border-red-400 focus:bg-red-50 active:bg-red-100"
+                                            hover:border-red-400 "
                                     >
                                         <div className="relative flex items-center space-x-4 justify-center">
                                             <img
