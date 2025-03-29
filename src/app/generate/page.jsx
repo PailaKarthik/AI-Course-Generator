@@ -30,7 +30,6 @@ import { loader } from "@/components/ui/Custom/ToastLoader";
 
 //Select Card component
 const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
-    
     return (
         <div className="space-y-2">
             <FormLabel className="text-sm font-medium">{title}</FormLabel>
@@ -67,7 +66,7 @@ export default function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data: session } = useSession();
     const router = useRouter();
-    const {showLoader} = loader()
+    const { showLoader } = loader();
 
     const formSchema = z.object({
         concept: z
@@ -124,6 +123,19 @@ export default function Page() {
             return;
         }
 
+        const checkRes = await fetch("/api/roadmap/all");
+        let checkData = await checkRes.json();
+        
+        checkData = checkData.docs.filter((e)=> e.process === "completed")
+        
+        if (checkData.length > 5) {
+            toast.error(
+                "The limit of 6 courses has been reached. You can delete the existing ones to create a new one."
+            );
+            setIsSubmitting(false)
+            return
+        }
+        
         const prompt = `
             Generate a structured learning roadmap for ${data.concept} at ${data.knowledgeLevel}, tailored for a ${data.difficultyLevel} learning experience, considering a ${data.timeCommitment} and aiming for completion in ${data.completionTime}, generate as many chapters as possible if the completion time is greater than or equals to 3-months. scaling chapters accordingly with key topics, objectives, resources, and exercises; if unsuitable for a structured course across all age groups, return { "error": 404 }.
         `;
@@ -149,7 +161,7 @@ export default function Page() {
             if (data.process !== "pending") {
                 if (data.process === "completed") {
                     toast.success("Roadmap generated successfully");
-                    showLoader()
+                    showLoader();
                     router.push(`/roadmap/${id}`);
                 } else if (data.process === "error") {
                     toast.error(data.message);

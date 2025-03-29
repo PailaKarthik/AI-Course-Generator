@@ -7,7 +7,7 @@ const LoaderContext = createContext();
 
 const ToastLoader = () => {
     return (
-        <div className="h-screen w-screen top-0 absolute z-20 bg-background/5 backdrop-blur-3xl">
+        <div className="h-screen w-screen top-0 absolute z-20 bg-background/5 ">
             <motion.div
                 initial={{ y: 0 }}
                 animate={{ y: 60 }}
@@ -23,32 +23,37 @@ const ToastLoader = () => {
 export default function LoaderProvider({ children }) {
     const [loading, setLoading] = useState(false);
     const pathName = usePathname();
-    const showLoader = () => setLoading(true);
-    const hideLoader = () => setLoading(false);
+    const showLoader = () => {
+        window.scrollTo(0, 0);
+        document.documentElement.style.overflow = "hidden";
+        setLoading(true);
+    };
+    const hideLoader = () => {
+        document.documentElement.style.overflow = "auto";
+        setLoading(false);
+    };
 
     const handleGlobalLinkClick = (event) => {
         let target = event.target;
-        const skipHashes = ["#features", "#how-it-works", "#faq"]; 
-    
+        const skipHashes = ["#features", "#how-it-works", "#faq"];
+
         while (target && target.tagName !== "A") {
             target = target.parentElement;
         }
-    
+
         if (target && target.href) {
             const url = new URL(target.href);
-            const hash = url.hash; 
-    
+            const hash = url.hash;
+
             if (
-                target.href.includes(window.location.origin) && 
-                target.href !== window.location.href && 
-                !(hash && skipHashes.includes(hash)) 
+                target.href.includes(window.location.origin) &&
+                target.href !== window.location.href &&
+                !(hash && skipHashes.includes(hash))
             ) {
                 showLoader();
             }
         }
     };
-    
-    
 
     useEffect(() => {
         hideLoader();

@@ -2,7 +2,15 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { auth } from "@/app/auth";
 import { db } from "@/lib/firebase";
-import { doc, updateDoc, increment, setDoc } from "firebase/firestore";
+import {
+    doc,
+    updateDoc,
+    increment,
+    setDoc,
+    query,
+    collection,
+    getDocs
+} from "firebase/firestore";
 import { nanoid } from "nanoid";
 
 async function updateDatabase(details, id, user) {
@@ -93,6 +101,19 @@ async function generateRoadmap(prompt, id, session, user_prompt) {
     }
 }
 
+async function checkEligible(session) {
+    const q = query(collection(db, "users", session.user.email, "roadmaps"));
+
+    let querySnapshot = await getDocs(q);
+    querySnapshot = querySnapshot.docs.filter(
+        (e) => e.data().process === "completed"
+    );
+    if (querySnapshot.length > 5) {
+        return false;
+    }
+    return true;
+}
+
 // Post request to generate the roadmap
 export async function POST(req) {
     let user_prompt = await req.json();
@@ -104,7 +125,13 @@ export async function POST(req) {
         const roadmapId = nanoid(20);
         await updateDatabase({ process: "pending" }, roadmapId, session.user);
         generateRoadmap(user_prompt.prompt, roadmapId, session, user_prompt);
-
+        const isEligible = await checkEligible(session);
+        if (!isEligible) {
+            return NextResponse.json(
+                { message: "Max limit reached" },
+                { status: 403 }
+            );
+        }
         return NextResponse.json(
             { process: "pending", id: roadmapId },
             { status: 202 }
