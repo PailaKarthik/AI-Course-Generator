@@ -12,8 +12,8 @@ const CTA = () => {
                             Ready to Transform Your Learning?
                         </h2>
                         <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                            Join thousands of learners who are mastering new
-                            skills with Yukthi.
+                            Take your learning to the next level and master new
+                            skills with Yukthi!
                         </p>
                     </div>
                     <div className="flex flex-col gap-2 min-[400px]:flex-row">

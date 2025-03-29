@@ -197,7 +197,7 @@ const Navbar = () => {
                                 Translate : <GoogleTranslate />
                             </div>
                         </div>
-                        <div className="mb-3">
+                        <div className="pb-12">
                             <div className="flex items-center">
                                 <Button
                                     onClick={toggleTheme}
