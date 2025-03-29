@@ -26,9 +26,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { loader } from "@/components/ui/Custom/ToastLoader";
 
 //Select Card component
 const SelectionCard = ({ options, selectedValue, onSelect, title }) => {
+    
     return (
         <div className="space-y-2">
             <FormLabel className="text-sm font-medium">{title}</FormLabel>
@@ -65,6 +67,7 @@ export default function Page() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data: session } = useSession();
     const router = useRouter();
+    const {showLoader} = loader()
 
     const formSchema = z.object({
         concept: z
@@ -146,6 +149,7 @@ export default function Page() {
             if (data.process !== "pending") {
                 if (data.process === "completed") {
                     toast.success("Roadmap generated successfully");
+                    showLoader()
                     router.push(`/roadmap/${id}`);
                 } else if (data.process === "error") {
                     toast.error(data.message);

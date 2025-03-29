@@ -128,6 +128,9 @@
   }
 }
 
+.samp{
+  background-color: rgb(9, 113, 232);
+}
 .custom-scroll::-webkit-scrollbar {
   width: 4px;
 }

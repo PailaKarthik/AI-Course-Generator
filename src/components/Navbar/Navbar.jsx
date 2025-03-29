@@ -262,7 +262,7 @@ const Navbar = () => {
                         <h2 className="text-xl font-semibold">YUKTHI</h2>
                     </Link>
                 </div>
-                <div className="flex items-center w-[152px] justify-center ">
+                <div className="flex items-center sm:w-[152px] w-22 justify-center ">
                     {session && (
                         <div className="mr-2 flex gap-3 relative">
                             xp{" "}

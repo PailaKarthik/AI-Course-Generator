@@ -5,10 +5,13 @@ import { ArrowUpRight } from "lucide-react";
 
 const Hero = () => {
     return (
-        <section className="py-10 w-screen md:py-12 relative flex justify-center items-center">
-            <div className="absolute inset-0 bg-gradient-radial  rounded-full w-[80%] h-[80%] mx-auto blur-3xl -z-10"></div>
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="flex justify-center items-center">
+        <section className="py-10 w-screen md:py-12 overflow-y-hidden overflow-x-hidden relative flex justify-center items-center">
+            <div className="container mx-auto px-4 md:px-6 ">
+                <div className="flex justify-center relative items-center">
+                    <div className="absolute">
+                        <div className=" w-lg h-[512px] translate-x-10 border rounded-full absolute bg-[radial-gradient(100%_100%_at_bottom_right,white,white,rgb(9,113,232,.8))]  blur-3xl dark:opacity-20 opacity-20"></div>
+                        <div className=" w-lg h-[512px] -translate-x-130 -translate-y-150 border rounded-full absolute bg-[radial-gradient(100%_100%_at_top_left,white,white,rgb(9,113,232,.8))]  blur-3xl dark:opacity-20 opacity-20"></div>
+                    </div>
                     <div className="relative flex flex-col justify-center items-center max-w-2xl space-y-4 text-center p-8 rounded-xl border-2 border-transparent">
                         <div className="pr-6">
                             <Image
@@ -19,7 +22,8 @@ const Hero = () => {
                                 height={80}
                             ></Image>
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+                        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl dark:bg-[radial-gradient(70%_70%_at_top_center,white,white,rgb(9,113,232,.5))] bg-[radial-gradient(60%_60%_at_top_center,black,black,rgb(9,113,232,.8))] bg-white text-transparent bg-clip-text"
+                        style={{backgroundImage : ""}}>
                             Learn Any Concept with AI-Generated Courses
                         </h1>
                         <p className="max-w-[600px] text-muted-foreground md:text-xl">
