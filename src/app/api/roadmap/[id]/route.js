@@ -44,7 +44,7 @@ export async function DELETE(req, { params }) {
         );
 
         const chapterSnapshot = await getDocs(chaptersRef);
-        const deletePromises = chapterSnapshot.docs.map(async (doc) => {
+        const deletePromises = chapterSnapshot.docs.map(async (chapterdoc) => {
             const tasksRef = doc(
                 db,
                 "users",
@@ -52,18 +52,20 @@ export async function DELETE(req, { params }) {
                 "roadmaps",
                 id,
                 "chapters",
-                doc.id,
+                chapterdoc.id,
                 "tasks",
                 "task"
             );
             deleteDoc(tasksRef);
-            deleteDoc(doc.ref);
+            deleteDoc(chapterdoc.ref);
         });
         await Promise.all(deletePromises);
         await deleteDoc(docRef);
 
         return NextResponse.json({ message: "Roadmap deleted successfully" });
     } catch (error) {
+        console.log(error);
+        
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }
