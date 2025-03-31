@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
     try {
         const session = await auth();
-        const { id } =  await params;
+        const { id } = await params;
         const docRef = doc(db, "users", session.user.email, "roadmaps", id);
         const docSnap = await getDoc(docRef);
 
@@ -28,7 +28,7 @@ export async function GET(req, { params }) {
     }
 }
 
-export async function DELETE(req ,{ params }) {
+export async function DELETE(req, { params }) {
     try {
         const session = await auth();
 
@@ -42,10 +42,23 @@ export async function DELETE(req ,{ params }) {
             id,
             "chapters"
         );
+
         const chapterSnapshot = await getDocs(chaptersRef);
-        const deletePromises = chapterSnapshot.docs.map((doc) =>
-            deleteDoc(doc.ref)
-        );
+        const deletePromises = chapterSnapshot.docs.map(async (doc) => {
+            const tasksRef = doc(
+                db,
+                "users",
+                session.user.email,
+                "roadmaps",
+                id,
+                "chapters",
+                doc.id,
+                "tasks",
+                "task"
+            );
+            deleteDoc(tasksRef);
+            deleteDoc(doc.ref);
+        });
         await Promise.all(deletePromises);
         await deleteDoc(docRef);
 

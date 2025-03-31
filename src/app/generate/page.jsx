@@ -125,17 +125,17 @@ export default function Page() {
 
         const checkRes = await fetch("/api/roadmap/all");
         let checkData = await checkRes.json();
-        
-        checkData = checkData.docs.filter((e)=> e.process === "completed")
-        
+
+        checkData = checkData.docs.filter((e) => e.process === "completed");
+
         if (checkData.length > 5) {
             toast.error(
                 "The limit of 6 courses has been reached. You can delete the existing ones to create a new one."
             );
-            setIsSubmitting(false)
-            return
+            setIsSubmitting(false);
+            return;
         }
-        
+
         const prompt = `
             Generate a structured learning roadmap for ${data.concept} at ${data.knowledgeLevel}, tailored for a ${data.difficultyLevel} learning experience, considering a ${data.timeCommitment} and aiming for completion in ${data.completionTime}, generate as many chapters as possible if the completion time is greater than or equals to 3-months. scaling chapters accordingly with key topics, objectives, resources, and exercises; if unsuitable for a structured course across all age groups, return { "error": 404 }.
         `;
@@ -164,6 +164,9 @@ export default function Page() {
                     showLoader();
                     router.push(`/roadmap/${id}`);
                 } else if (data.process === "error") {
+                    toast.error(data.message);
+                    setIsSubmitting(false);
+                } else if (data.process === "unsuitable") {
                     toast.error(data.message);
                     setIsSubmitting(false);
                 }
