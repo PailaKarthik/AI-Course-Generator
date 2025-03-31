@@ -15,7 +15,7 @@ const Page = () => {
    }, [session, router]); 
 
    return (
-      <div>
+      <div className="relative">
          <Landing />
       </div>
    );

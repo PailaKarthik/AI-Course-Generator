@@ -9,7 +9,7 @@ export default function SignIn() {
     const router = useRouter();
 
     useEffect(() => {
-        if (session) {
+        if (session?.user) {
             router.push("/roadmap");
         }
     }, [session, router]);

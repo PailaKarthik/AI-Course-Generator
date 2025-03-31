@@ -100,7 +100,7 @@ const HowItWorks = () => {
                                 </div>
 
                                 <AlertDialog>
-                                    <AlertDialogTrigger className="flex bg-foreground text-background items-center border px-2 rounded-md cursor-pointer hover:bg-accent-foreground transition">
+                                    <AlertDialogTrigger className="flex bg-foreground text-background items-center border px-2 py-2 rounded-md cursor-pointer hover:bg-accent-foreground transition">
                                         Generate Course{" "}
                                         <ChevronRight className="ml-1 h-4 w-4" />
                                     </AlertDialogTrigger>
