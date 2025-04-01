@@ -87,7 +87,7 @@ With innovation, flexibility, and logical reasoning (Yukthi) as our core princip
     bun dev
    ```
 7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-8. Access the Yukthi website at the specified URL: [https://yukthi-three.vercel.app](https://yukthi-three.vercel.app)
+8. Access the Yukthi website at the specified URL: [https://yukthiii.vercel.app](https://yukthiii.vercel.app)
 
 ## Usage Instructions
 1. Log in to the dashboard using your credentials.
