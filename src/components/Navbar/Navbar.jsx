@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Logout from "./Logout";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
     const [session, setSession] = useState(null);
@@ -199,36 +200,58 @@ const Navbar = () => {
                         </div>
                         <div className="pb-12">
                             <div className="flex items-center">
-                                <Button
-                                    onClick={toggleTheme}
-                                    variant={"ghost"}
-                                    className={"border-0 ml-2"}
-                                >
-                                    {theme === "light" ? <Moon /> : <Sun />}
-                                </Button>
                                 {session ? (
                                     <div className="flex items-center">
                                         <Link
                                             href={"/profile"}
                                             onClick={() => setSidebar(false)}
                                         >
-                                            <Button variant={"ghost"}>
-                                                <User className="w-5" />
-                                            </Button>
+                                            <Avatar className={"w-7 mx-1 h-7"}>
+                                                <AvatarImage
+                                                    src={session?.user.image}
+                                                />
+                                                <AvatarFallback>
+                                                    {session?.user.name[0].toUpperCase()}
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </Link>
+                                        <Button
+                                            onClick={toggleTheme}
+                                            variant={"ghost"}
+                                            className={"border-0 ml-2"}
+                                        >
+                                            {theme === "light" ? (
+                                                <Moon />
+                                            ) : (
+                                                <Sun />
+                                            )}
+                                        </Button>
                                         <Logout
                                             onConfirm={signOutUser}
                                         ></Logout>
                                     </div>
                                 ) : (
-                                    <Link
-                                        href="/login"
-                                        onClick={() => setSidebar(false)}
-                                    >
-                                        <Button size="sm">
-                                            <LogIn></LogIn>Login
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={toggleTheme}
+                                            variant={"ghost"}
+                                            className={"border-0 ml-2"}
+                                        >
+                                            {theme === "light" ? (
+                                                <Moon />
+                                            ) : (
+                                                <Sun />
+                                            )}
                                         </Button>
-                                    </Link>
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setSidebar(false)}
+                                        >
+                                            <Button size="sm">
+                                                <LogIn></LogIn>Login
+                                            </Button>
+                                        </Link>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -295,7 +318,7 @@ const Navbar = () => {
                             </span>
                         </div>
                     )}
-                    <div className="max-sm:hidden">
+                    <div className="max-sm:hidden flex items-center">
                         <Button
                             onClick={toggleTheme}
                             variant={"ghost"}
@@ -305,9 +328,12 @@ const Navbar = () => {
                         </Button>
                         {session ? (
                             <Link href={"/profile"}>
-                                <Button variant={"ghost"}>
-                                    <User className="w-5" />
-                                </Button>
+                                <Avatar className={"w-7 h-7"}>
+                                    <AvatarImage src={session?.user.image} />
+                                    <AvatarFallback>
+                                        {session?.user.name[0].toUpperCase()}
+                                    </AvatarFallback>
+                                </Avatar>
                             </Link>
                         ) : (
                             <Link href="/login">

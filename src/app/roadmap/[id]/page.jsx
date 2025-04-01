@@ -20,6 +20,8 @@ async function getRoadmap(id) {
         if (!docSnap.exists) {
             return false;
         }
+        console.log(docSnap.data());
+        
         return docSnap.data();
     }
 }

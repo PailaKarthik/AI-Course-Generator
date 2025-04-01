@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { query, collection, getDocs } from "firebase/firestore";
+import { query, collection, getDocs , deleteDoc} from "firebase/firestore";
 import { auth } from "@/app/auth";
 import { NextResponse } from "next/server";
 
@@ -33,7 +33,7 @@ export async function GET() {
         
         let difficultyArray =[0, 0 , 0]
         docs.forEach((e)=>{
-            if(e.difficulty === "in-depth"){
+            if(e.difficulty === "inDepth"){
                 difficultyArray[2] += 1 
             }else if(e.difficulty === "fast"){
                 difficultyArray[0] += 1 
