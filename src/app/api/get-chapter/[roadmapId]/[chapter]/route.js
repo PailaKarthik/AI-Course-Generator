@@ -47,12 +47,13 @@ export async function GET(req, { params }) {
                 { status: 404 }
             );
         }
-        const tasks = Object.values(taskSnap.data());
+        const tasks = Object.values(taskSnap?.data()|| {}) ;
 
         return NextResponse.json({
             chapter: { ...docSnap.data(), tasks },
         });
     } catch (error) {
+        
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }

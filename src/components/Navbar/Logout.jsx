@@ -13,7 +13,7 @@ import { LogOut } from "lucide-react";
 const Logout = ({ onConfirm }) => {
     return (
         <AlertDialog>
-            <AlertDialogTrigger className="hover:bg-accent py-2 px-3 hover:text-accent-foreground">
+            <AlertDialogTrigger className="hover:bg-accent rounded-md transistion cursor-pointer py-2 px-3 hover:text-accent-foreground">
                 <LogOut className="w-4"></LogOut>
             </AlertDialogTrigger>
             <AlertDialogContent>

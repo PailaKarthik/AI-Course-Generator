@@ -32,8 +32,8 @@ const Features = () => {
                         </p>
                     </div>
                 </div>
-                <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-12">
-                    <Card>
+                <div className="mx-auto flex gap-6 flex-wrap max-w-5xl items-center justify-center md:mt-12">
+                    <Card className={"max-md:sticky top-4 w-[320px]"}>
                         <CardHeader>
                             <Sparkles className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>AI-Powered Generation</CardTitle>
@@ -43,7 +43,7 @@ const Features = () => {
                             </CardDescription>
                         </CardHeader>
                     </Card>
-                    <Card>
+                    <Card className={"max-md:sticky top-8 w-[320px]"}>
                         <CardHeader>
                             <Layers className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>Chapter-wise Learning</CardTitle>
@@ -53,7 +53,7 @@ const Features = () => {
                             </CardDescription>
                         </CardHeader>
                     </Card>
-                    <Card>
+                    <Card className={"max-md:sticky top-12 w-[320px]"}>
                         <CardHeader>
                             <Compass className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>Personalized Path</CardTitle>
@@ -63,7 +63,7 @@ const Features = () => {
                             </CardDescription>
                         </CardHeader>
                     </Card>
-                    <Card>
+                    <Card className={"max-md:sticky top-16 w-[320px]"}>
                         <CardHeader>
                             <BookOpen className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>Interactive Exercises</CardTitle>
@@ -73,7 +73,7 @@ const Features = () => {
                             </CardDescription>
                         </CardHeader>
                     </Card>
-                    <Card>
+                    <Card className={"max-md:sticky top-20 w-[320px]"}>
                         <CardHeader>
                             <CheckCircle className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>Progress Tracking</CardTitle>
@@ -83,7 +83,7 @@ const Features = () => {
                             </CardDescription>
                         </CardHeader>
                     </Card>
-                    <Card>
+                    <Card className={"max-md:sticky top-24 w-[320px]"}>
                         <CardHeader>
                             <Brain className="h-10 w-10 text-primary mb-2" />
                             <CardTitle>Any Topic, Any Level</CardTitle>

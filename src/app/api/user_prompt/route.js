@@ -81,14 +81,11 @@ async function generateRoadmap(prompt, id, session, user_prompt) {
                 ...parsedResponse,
                 createdAt: Date.now(),
                 difficulty,
+                process: "completed"
             },
             id,
             session.user
         );
-        const roadmapRef = doc(db, "users", session.user.email, "roadmaps", id);
-        await updateDoc(roadmapRef, {
-            process: "completed",
-        });
     } catch (error) {
         await updateDatabase(
             {
