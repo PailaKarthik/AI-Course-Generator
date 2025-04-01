@@ -7,6 +7,7 @@ import { IoLogoWhatsapp } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa6";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function ContactPage() {
@@ -37,12 +38,16 @@ export default function ContactPage() {
     sendEmail({ email, message });
     setEmail("");
     setMessage("");
-    alert("Your message has been sent successfully!");
+    toast("Message sent successfully!", { type: "success" });
+    setTimeout(() => {
+      formRef.current.removeAttribute("disabled");
+    }, 2000);
   };
 
   return (
     <div className="flex flex-col min-h-[92vh] overflow-hidden">
       <div className="flex-1  flex flex-col">
+      <ToastContainer />
         <div className="dark:bg-black bg-white py-6 px-4">
           <div className="max-w-3xl  mx-auto text-center">
             <h1 className="text-[#000000] dark:text-white text-6xl md:text-7xl font-bold mb-6 font-serif">Contact Us</h1>
@@ -51,7 +56,7 @@ export default function ContactPage() {
             </p>
           </div>
         </div>
-        <div className="bg-[#000000] dark:bg-white flex-1 py-2 px-4">
+        <div className="bg-[#000000] dark:bg-white flex-1 py-8 px-4">
           <div className="max-w-xl mx-auto">
             <h2 className="dark:text-[#000000] text-white text-lg md:text-xl font-bold mb-2 text-center font-serif">Send a Message</h2>
 
