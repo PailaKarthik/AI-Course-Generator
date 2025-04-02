@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { LRUCache } from "lru-cache";
 import { auth } from "./app/auth";
+import requestIp from "request-ip";
 
 const rateLimitOptions = {
     max: 20,
@@ -11,7 +12,7 @@ const cache = new LRUCache(rateLimitOptions);
 
 export async function middleware(req) {
     const { pathname } = req.nextUrl;
-    const ip = req.headers.get("x-forwarded-for") || req.ip;
+    const ip = requestIp.getClientIp(req)|| req.ip;
 
     if (pathname.startsWith("/api/auth")) {
         return NextResponse.next();
@@ -48,7 +49,5 @@ export const config = {
         "/chapter-test/:path*",
         "/roadmap/:path*",
         "/api/user/:path*",
-        "/api/orders/:path*",
-        "/api/payments/:path*",
     ],
 };

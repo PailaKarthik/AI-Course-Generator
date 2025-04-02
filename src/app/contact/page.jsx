@@ -7,7 +7,8 @@ import { IoLogoWhatsapp } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa6";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { toast } from "sonner";
 
 
 export default function ContactPage() {
@@ -38,7 +39,7 @@ export default function ContactPage() {
     sendEmail({ email, message });
     setEmail("");
     setMessage("");
-    toast("Message sent successfully!", { type: "success" });
+    toast.success("Message sent successfully!", { type: "success" });
     setTimeout(() => {
       formRef.current.removeAttribute("disabled");
     }, 2000);

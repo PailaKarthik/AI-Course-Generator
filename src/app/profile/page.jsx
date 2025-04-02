@@ -19,6 +19,7 @@ export default function Page() {
     const [rank, setRank] = useState(0)
     const [loading, setLoading] = useState(false)
     const [difficultyLevel, setDifficultyLevel] = useState([])
+    const [leaderboard, setLeaderboard] = useState([])
 
     useEffect(() => {
         async function fetchUser() {
@@ -48,6 +49,7 @@ export default function Page() {
             const res = await fetch("/api/getrank");
             const data = await res.json();
             setRank(data.rank)
+            setLeaderboard(data.leaderboard)
         }
 
         fetchUser();
@@ -60,7 +62,7 @@ export default function Page() {
             <main className="flex-1">
                 <div className="container mx-auto max-md:pb-6 md:py-6">
                     <div className="grid gap-6 mx-4 relative md:grid-cols-[1fr_3fr]">
-                        <Sidebar user={userData} rank={rank} difficultyLevel= {difficultyLevel} />
+                        <Sidebar user={userData} rank={rank} leaderboard={leaderboard} difficultyLevel= {difficultyLevel} />
 
                         <div className="space-y-6 pt-3">
                             <Card>
