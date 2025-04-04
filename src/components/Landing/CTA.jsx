@@ -31,7 +31,7 @@ const CTA = () => {
                             variant="outline"
                             className="bg-transparent border-primary-foreground text-primary-foreground hover:text-primary-foreground/75 hover:bg-primary-foreground/10"
                         >
-                            See demo
+                            <Link href={"/demo"}>See Demo</Link>
                         </Button>
                     </div>
                 </div>

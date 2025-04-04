@@ -22,8 +22,10 @@ const Hero = () => {
                                 height={80}
                             ></Image>
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl dark:bg-[radial-gradient(70%_70%_at_top_center,white,white,rgb(9,113,232,.5))] bg-[radial-gradient(60%_60%_at_top_center,black,black,rgb(9,113,232,.8))] bg-white text-transparent bg-clip-text"
-                        style={{backgroundImage : ""}}>
+                        <h1
+                            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl dark:bg-[radial-gradient(70%_70%_at_top_center,white,white,rgb(9,113,232,.5))] bg-[radial-gradient(60%_60%_at_top_center,black,black,rgb(9,113,232,.8))] bg-white text-transparent bg-clip-text"
+                            style={{ backgroundImage: "" }}
+                        >
                             Learn Any Concept with AI-Generated Courses
                         </h1>
                         <p className="max-w-[600px] text-muted-foreground md:text-xl">
@@ -40,7 +42,7 @@ const Hero = () => {
                                 </Button>
                             </Link>
                             <Button variant="outline" size="lg">
-                                See Demo
+                                <Link href={"/demo"}>See Demo</Link>
                             </Button>
                         </div>
                     </div>

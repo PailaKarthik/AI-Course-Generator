@@ -129,6 +129,9 @@ const Navbar = () => {
                                             <Link href="/profile">Profile</Link>
                                         </li>
                                         <li onClick={() => setSidebar(false)}>
+                                            <Link href="/demo"> See demo</Link>
+                                        </li>
+                                        <li onClick={() => setSidebar(false)}>
                                             <Link href="/contact">Contact</Link>
                                         </li>
                                     </ul>

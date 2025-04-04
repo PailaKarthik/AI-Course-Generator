@@ -61,6 +61,7 @@ const Page = ({ chapter, roadmapId }) => {
                 const data = await response.json();
 
                 if (data.chapter.process === "pending") {
+                    await handleNotFoundChapter();
                     await handlePendingChapter();
                 } else {
                     setChapterData(data.chapter.content);
