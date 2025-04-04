@@ -15,16 +15,12 @@ const Page = () => {
         }
     }, [session, router]);
 
-    if (status === "loading") {
+    if (status === "loading" || status === "authenticated") {
         return (
             <div className="w-screen h-[calc(100vh-64px)] bg-background flex items-center justify-center">
                 <Loader2 className="animate-spin ease-in-out"></Loader2>
             </div>
         );
-    }
-
-    if (status === "authenticated") {
-        return null;
     }
 
     return (
