@@ -209,6 +209,7 @@ const Navbar = () => {
                                             <Avatar className={"w-7 mx-1 h-7"}>
                                                 <AvatarImage
                                                     src={session?.user.image}
+                                                    alt={"logo"}
                                                 />
                                                 <AvatarFallback>
                                                     {session?.user.name[0].toUpperCase()}
@@ -329,7 +330,10 @@ const Navbar = () => {
                         {session ? (
                             <Link href={"/profile"}>
                                 <Avatar className={"w-7 h-7"}>
-                                    <AvatarImage src={session?.user.image} />
+                                    <AvatarImage
+                                        src={session?.user.image}
+                                        alt={"logo"}
+                                    />
                                     <AvatarFallback>
                                         {session?.user.name[0].toUpperCase()}
                                     </AvatarFallback>

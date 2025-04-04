@@ -49,7 +49,6 @@ const LeaderBoard = ({ leaderboard }) => {
             user.email === session?.user.email ? { ...user, name: "You" } : user
         );
         setLeader(samp);
-        console.log(leader);
     }, [session, leaderboard]);
 
     return (
@@ -104,14 +103,16 @@ const LeaderBoard = ({ leaderboard }) => {
                               );
                           }
                       })
-                    : Array(7).fill(0).map((e, index) => (
-                          <div
-                              key={index}
-                              className="border-t flex justify-between py-1.5 px-2 last-of-type:border-b-0"
-                          >
-                              <Skeleton className={"w-full h-5"}></Skeleton>
-                          </div>
-                      ))}
+                    : Array(7)
+                          .fill(0)
+                          .map((e, index) => (
+                              <div
+                                  key={index}
+                                  className="border-t flex justify-between py-1.5 px-2 last-of-type:border-b-0"
+                              >
+                                  <Skeleton className={"w-full h-5"}></Skeleton>
+                              </div>
+                          ))}
             </div>
         </div>
     );

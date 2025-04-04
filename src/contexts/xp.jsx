@@ -20,7 +20,6 @@ export const XpProvider = ({ children }) => {
     async function getXp() {
         const res = await fetch("/api/getuser");
         const data = await res.json();
-        console.log(data);
         
         setChanged(data.xp - xp)
         setXp(data.xp);

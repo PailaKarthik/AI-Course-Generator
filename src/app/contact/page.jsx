@@ -24,7 +24,6 @@ export default function ContactPage() {
   
     emailjs.send(serviceId, templateId, formData, userId)
       .then((response) => {
-        console.log("Email sent successfully!", response.status, response.text);
         formRef.current.removeAttribute("disabled");
       })
       .catch((error) => {
