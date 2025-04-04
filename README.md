@@ -31,7 +31,7 @@ With innovation, flexibility, and logical reasoning (Yukthi) as our core princip
 ## Technologies Used
 1. **Gemini API** – Used to generate AI-driven, chapter-wise course content with interactive learning tasks.
 
-2. **Firebase** – Backend services for authentication, database management, and hosting.
+2. **Firebase** – Backend services for database management.
 
 3. **Next.js** – Framework for building the frontend with optimized performance and SEO capabilities.
 
@@ -40,15 +40,16 @@ With innovation, flexibility, and logical reasoning (Yukthi) as our core princip
 5. **Auth.js** – Secure authentication and user management system.
 
 ## Website Photos  
+![image](https://github.com/user-attachments/assets/0ebba6e1-5eb7-4e40-b6ff-747607d1219c)
+![image](https://github.com/user-attachments/assets/14159346-710c-4f1f-b987-3b770a490e19)
+![image](https://github.com/user-attachments/assets/3158eb8a-dbda-4570-85af-61463241f403)
+![image](https://github.com/user-attachments/assets/4f89132f-5a85-4628-9b76-72761dec8508)
+![image](https://github.com/user-attachments/assets/f81ff3d9-44ce-4c34-b45c-e9bdb02ce588)
+![image](https://github.com/user-attachments/assets/d1f5613a-b774-4882-946c-dcf62d72330f)
+![image](https://github.com/user-attachments/assets/5d9671dc-61c9-402f-a053-321251d40ca2)
+![image](https://github.com/user-attachments/assets/01e57531-ec23-4791-b4c8-7bd3015c95b9)
+![image](https://github.com/user-attachments/assets/0f39d654-818b-44a7-b90b-813323c2c97a)
 
- ![image](https://github.com/user-attachments/assets/d92b9b3e-117b-423f-a0f0-ec85d94b531d)
- ![image](https://github.com/user-attachments/assets/562b660d-eac4-40fa-971c-e0ec68d1efa7)
- ![image](https://github.com/user-attachments/assets/6078a9b4-7661-467b-ae2c-a154a9cc96f9)
- ![image](https://github.com/user-attachments/assets/125af690-22ff-4064-80eb-db4f72184bfa)
- ![image](https://github.com/user-attachments/assets/0c31cfd5-8491-4831-aced-3a35415cdf10)
- ![image](https://github.com/user-attachments/assets/b886ac94-89fd-4ffb-ac8b-77b700961ef5)
- ![image](https://github.com/user-attachments/assets/48054583-0312-4271-aa28-e229a2ff4cab)
- ![image](https://github.com/user-attachments/assets/3512245f-445e-4045-a2ea-7c1fd517bb19)
 
 
 
