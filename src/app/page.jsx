@@ -11,7 +11,7 @@ const Page = () => {
 
     useEffect(() => {
         if (session?.user) {
-            router.push("/roadmap");
+            router.replace("/roadmap");
         }
     }, [session, router]);
 
@@ -21,6 +21,10 @@ const Page = () => {
                 <Loader2 className="animate-spin ease-in-out"></Loader2>
             </div>
         );
+    }
+
+    if (status === "authenticated") {
+        return null;
     }
 
     return (
