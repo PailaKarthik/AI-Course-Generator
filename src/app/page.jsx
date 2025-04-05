@@ -24,7 +24,7 @@ const Page = () => {
 
     useEffect(() => {
         if (status === "authenticated") {
-            // router.replace("/roadmap");
+            router.replace("/roadmap");
         }
     }, [session, status]);
 
@@ -42,10 +42,10 @@ const Page = () => {
     if (status === "authenticated" || true) {
         setTimeout(() => {
             setText("Please wait while we load your data.");
-        }, 3000);
+        }, 4000);
         setTimeout(() => {
             setText("Almost there...")
-        }, 3000);
+        }, 8000);
         return (
             <div className="relative">
                 <Loading />
