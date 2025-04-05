@@ -32,11 +32,11 @@ const Page = () => {
   useEffect(() => {
     const t1 = setTimeout(() => {
       setText("Please wait while we load your data.");
-    }, 4000);
+    }, 5000);
 
     const t2 = setTimeout(() => {
       setText("Almost there...");
-    }, 8000);
+    }, 11000);
 
     return () => {
       clearTimeout(t1);
