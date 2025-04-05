@@ -2,7 +2,7 @@
 import Landing from "@/components/Landing/Landing";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "./loading";
 const thoughts = [
     "The brain uses 20% of your body's energy.",
@@ -20,10 +20,11 @@ const thoughts = [
 const Page = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
+    let [text, setText] = useState(thoughts[Math.floor(Math.random() * 10)]);
 
     useEffect(() => {
         if (status === "authenticated") {
-            router.replace("/roadmap");
+            // router.replace("/roadmap");
         }
     }, [session, status]);
 
@@ -38,12 +39,18 @@ const Page = () => {
         );
     }
 
-    if (status === "authenticated") {
+    if (status === "authenticated" || true) {
+        setTimeout(() => {
+            setText("Please wait while we load your data.");
+        }, 3000);
+        setTimeout(() => {
+            setText("Almost there...")
+        }, 3000);
         return (
             <div className="relative">
                 <Loading />
                 <p className="absolute z-[5] top-1/2 left-1/2 translate-y-1/2 -translate-x-1/2">
-                    Please wait while we load your data.
+                    {text}
                 </p>
             </div>
         );
