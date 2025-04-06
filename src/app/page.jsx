@@ -32,11 +32,11 @@ const Page = () => {
   useEffect(() => {
     const t1 = setTimeout(() => {
       setText("Please wait while we load your data.");
-    }, 5000);
+    }, 6000);
 
     const t2 = setTimeout(() => {
       setText("Almost there...");
-    }, 11000);
+    }, 13000);
 
     return () => {
       clearTimeout(t1);
@@ -46,7 +46,7 @@ const Page = () => {
 
   if (status === "loading") {
     return (
-      <div className="relative">
+      <div className="relative text-center">
         <Loading />
         <p className="absolute z-[5] top-1/2 left-1/2 translate-y-1/2 -translate-x-1/2">
           {text}
@@ -57,7 +57,7 @@ const Page = () => {
 
   if (status === "authenticated") {
     return (
-      <div className="relative">
+      <div className="relative text-center">
         <Loading />
         <p className="absolute z-[5] top-1/2 left-1/2 translate-y-1/2 -translate-x-1/2">
           {text}
