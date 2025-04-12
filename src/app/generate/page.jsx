@@ -71,7 +71,10 @@ export default function Page() {
     const formSchema = z.object({
         concept: z
             .string()
-            .min(2, { message: "Concept must be at least 2 characters long" }),
+            .min(2, { message: "Concept must be at least 2 characters long" })
+            .max(300, {
+                message: "Concept must not exceed 300 characters.",
+            }),
         knowledgeLevel: z.enum(["beginner", "intermediate", "advanced"], {
             errorMap: () => ({ message: "Please select a knowledge level" }),
         }),
@@ -145,9 +148,13 @@ export default function Page() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt, difficulty: data.difficultyLevel }),
         });
-
         const roadmapData = await res.json();
         const id = roadmapData.id;
+        if (res.status === 400) {
+            toast.error(roadmapData.message);
+            setIsSubmitting(false);
+            return;
+        }
 
         if (!id) {
             toast.error("Failed to generate roadmap");
@@ -173,6 +180,14 @@ export default function Page() {
                 clearInterval(interval);
             }
         }, 3000);
+    };
+
+    const onError = (errors) => {
+        for (const field in errors) {
+            if (errors[field]?.message) {
+                toast.error(errors[field].message);
+            }
+        }
     };
 
     const knowledgeLevelOptions = [
@@ -249,7 +264,7 @@ export default function Page() {
                 <Card className="p-6 border-0 shadow-none">
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(onSubmit)}
+                            onSubmit={form.handleSubmit(onSubmit , onError)}
                             className="space-y-8"
                         >
                             <FormField

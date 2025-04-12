@@ -66,25 +66,42 @@ async function generateRoadmap(prompt, id, session, user_prompt) {
         const parsedResponse = parseJson(response.choices[0]?.message?.content);
         if (parsedResponse.error) {
             await updateDatabase(
-                { message: "The provided concept is unsuitable for forming a course.", process: "unsuitable" },
+                {
+                    message:
+                        "The provided concept is unsuitable for forming a course.",
+                    process: "unsuitable",
+                },
                 id,
                 session.user
             );
             return;
         }
 
-        const difficulty = user_prompt.difficulty === "in-depth" ? "inDepth" : user_prompt.difficulty;
-        await updateDoc(doc(db, "users", session.user.email), { [`roadmapLevel.${difficulty}`]: increment(1) });
+        const difficulty =
+            user_prompt.difficulty === "in-depth"
+                ? "inDepth"
+                : user_prompt.difficulty;
+        await updateDoc(doc(db, "users", session.user.email), {
+            [`roadmapLevel.${difficulty}`]: increment(1),
+        });
 
         await updateDatabase(
-            { ...parsedResponse, createdAt: Date.now(), difficulty, process: "completed" },
+            {
+                ...parsedResponse,
+                createdAt: Date.now(),
+                difficulty,
+                process: "completed",
+            },
             id,
             session.user
         );
     } catch (error) {
         console.error("Error generating roadmap:", error);
         await updateDatabase(
-            { message: "There was an error while generating your roadmap.", process: "error" },
+            {
+                message: "There was an error while generating your roadmap.",
+                process: "error",
+            },
             id,
             session.user
         );
@@ -93,7 +110,10 @@ async function generateRoadmap(prompt, id, session, user_prompt) {
 
 async function checkEligible(session) {
     try {
-        const q = query(collection(db, "users", session.user.email, "roadmaps"), where("process", "==", "completed"));
+        const q = query(
+            collection(db, "users", session.user.email, "roadmaps"),
+            where("process", "==", "completed")
+        );
         const querySnapshot = await getDocs(q);
         return querySnapshot.size <= 6;
     } catch (error) {
@@ -111,20 +131,49 @@ export async function POST(req) {
         return NextResponse.json({ message: "unauthorized" }, { status: 401 });
     }
 
+    if (user_prompt?.prompt.length > 800) {
+        console.log(user_prompt?.prompt.length);
+
+        return NextResponse.json(
+            {
+                message: "The given prompt is beyond maximum character length.",
+            },
+            { status: 400 }
+        );
+    }
+
     try {
         const roadmapId = nanoid(20);
         await updateDatabase({ process: "pending" }, roadmapId, session.user);
 
-        setTimeout(() => generateRoadmap(user_prompt.prompt, roadmapId, session, user_prompt), 0);
+        setTimeout(
+            () =>
+                generateRoadmap(
+                    user_prompt.prompt,
+                    roadmapId,
+                    session,
+                    user_prompt
+                ),
+            0
+        );
 
         const isEligible = await checkEligible(session);
         if (!isEligible) {
-            return NextResponse.json({ message: "Max limit reached" }, { status: 403 });
+            return NextResponse.json(
+                { message: "Max limit reached" },
+                { status: 403 }
+            );
         }
 
-        return NextResponse.json({ process: "pending", id: roadmapId }, { status: 202 });
+        return NextResponse.json(
+            { process: "pending", id: roadmapId },
+            { status: 202 }
+        );
     } catch (error) {
         console.error("Error in roadmap generation:", error);
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        return NextResponse.json(
+            { message: "Internal server error" },
+            { status: 500 }
+        );
     }
 }
