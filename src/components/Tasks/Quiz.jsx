@@ -75,7 +75,7 @@ export default function Quiz({ task, roadmapId, chapterNumber }) {
                 <CardContent className="pb-2">
                     <div className="space-y-6">
                         <h2 className="mb-0 text-lg ">Question</h2>
-                        <h3 className="text-lg select-none">{task.question}</h3>
+                        <h3 className="text-lg select-none">{task.question || task.content}</h3>
                         <RadioGroup
                             value={selectedOption}
                             className="space-y-3 text-sm"

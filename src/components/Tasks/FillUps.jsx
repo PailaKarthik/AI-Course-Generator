@@ -88,7 +88,7 @@ const FillUps = ({ task, roadmapId, chapterNumber }) => {
                         <h2 className="mb-0 text-lg font-semibold">Question</h2>
 
                         <div className="flex select-none flex-col gap-3 text-lg">
-                            <span>{task.question}</span>
+                            <span>{task.question || task.content}</span>
                             <div className="flex items-center gap-2">
                                 Enter your answer :
                                 <Input
