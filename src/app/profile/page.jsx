@@ -36,12 +36,13 @@ export default function Page() {
             const data = await res.json();
             const diffLevel = data.difficultyArray
             let docs = data.docs.length > 4 ? data.docs.slice(0, 4) : data.docs;
-            docs = docs.filter((e) => !e.completed);
+            docs = docs.filter((e) => e.process === 'completed');
             const completed =
                 data.docs.filter((roadmap) => roadmap.completed) || [];
             setcompletedRoadmaps(completed);
             setDifficultyLevel(diffLevel)
             setRecentRoamdaps(docs);
+            console.log(docs)
             setLoading(false)
         }
 
