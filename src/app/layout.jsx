@@ -19,7 +19,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata = {
-  title: "Yukthi",
+  title: "InnoVision",
   description: "Ultimate platform to master any concept",
 };
 

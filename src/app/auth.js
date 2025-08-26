@@ -7,6 +7,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    secret: process.env.NEXTAUTH_SECRET,
+    debug: true, // Enable debug mode
     providers: [
         GitHubProvider({
             clientId: process.env.GITHUB_ID,
@@ -14,7 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
     ],
     session: {
@@ -49,7 +51,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return true;
             } catch (error) {
                 console.error("Error saving user information:", error);
-                return false;
+                // Don't block authentication even if Firebase fails
+                // User can still sign in, we'll handle Firebase issues separately
+                return true;
             }
         },
         async jwt({ token, user, account }) {
@@ -60,6 +64,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
         async session({ session, token }) {
             try {
+                // Only try to fetch from Firebase if we have a valid session
+                if (!session?.user?.email) {
+                    return session;
+                }
+                
                 const userRef = doc(db, "users", session.user.email);
                 const userSnap = await getDoc(userRef);
                 
@@ -73,6 +82,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return session;
             } catch (error) {
                 console.error("Error fetching user information:", error);
+                // Return session without Firebase data if there's an error
+                // This prevents the auth from breaking
                 return session;
             }
         },
@@ -82,8 +93,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return `${baseUrl}/roadmap`;
         },
     },
-    pages: {
+/*     pages: {
         signIn: '/auth/signin',
         error: '/auth/error',
-    },
+    }, */
 });
