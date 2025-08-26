@@ -44,6 +44,17 @@ With innovation, flexibility, and logical reasoning (InnoVision) as our core pri
 
 5. **Auth.js** – Secure authentication and user management system.
 
+<!-- ## Website Photos
+
+![image](https://github.com/user-attachments/assets/0ebba6e1-5eb7-4e40-b6ff-747607d1219c)
+![image](https://github.com/user-attachments/assets/14159346-710c-4f1f-b987-3b770a490e19)
+![image](https://github.com/user-attachments/assets/3158eb8a-dbda-4570-85af-61463241f403)
+![image](https://github.com/user-attachments/assets/4f89132f-5a85-4628-9b76-72761dec8508)
+![image](https://github.com/user-attachments/assets/f81ff3d9-44ce-4c34-b45c-e9bdb02ce588)
+![image](https://github.com/user-attachments/assets/d1f5613a-b774-4882-946c-dcf62d72330f)
+![image](https://github.com/user-attachments/assets/5d9671dc-61c9-402f-a053-321251d40ca2)
+![image](https://github.com/user-attachments/assets/01e57531-ec23-4791-b4c8-7bd3015c95b9)
+![image](https://github.com/user-attachments/assets/0f39d654-818b-44a7-b90b-813323c2c97a) -->
 
 ## Installation Instructions
 
