@@ -92,8 +92,7 @@ With innovation, flexibility, and logical reasoning (InnoVision) as our core pri
     bun dev
    ```
 
-7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-8. Access the InnoVision website at the specified URL: [https://InnoVision.vercel.app](https://InnoVision.vercel.app)
+7. Open [https://ai-course-generator-kappa.vercel.app](https://ai-course-generator-kappa.vercel.app/) with your browser to see the result.
 
 ## Usage Instructions
 
