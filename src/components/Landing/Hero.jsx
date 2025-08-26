@@ -16,7 +16,7 @@ const Hero = () => {
             <div className="pr-6">
               <Image
                 src={"/InnoVision_LOGO-removebg-preview.png"}
-                className="scale-180 dark:invert-100"
+                className="scale-180 "
                 alt="logo"
                 width={80}
                 height={80}
